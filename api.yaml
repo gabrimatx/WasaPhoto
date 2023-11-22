@@ -1,0 +1,87 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/GABRIMAT1/Wasa_API/1.0.0
+info:
+  description: API for WasaPhoto project
+  version: 1.0.0
+  title: WasaPhoto API
+  contact:
+    email: matiddi.1985899@studenti.uniroma1.it
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+
+
+
+
+
+components:
+  schemas:
+    User:
+      title: User
+      description: User profile of a user.
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: Name of the user.
+          type: string
+          example: Gabriele Matiddi
+    Photo:
+      title: Photo
+      description: This object represents a photo in the system.
+      type: object
+      properties:
+        id:
+          description: Photo identifier, uniquely generated.
+          type: integer
+          example: 123456
+          readOnly: true
+        image_content:
+          description: Content of the photo.
+          type: string
+          format: base64
+          example: EXAMPLE HERE
+        releaseDate:
+          type: string
+          description: Date and time of photo publication.
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        caption:
+          description: Photo caption written by the user.
+          type: string
+          example: Bella giornata!
+        publisher:
+          description: Publisher of the photo.
+          type: string
+        likes:
+          description: Likes of the photo.
+          type: integer
+          example: 123
+
+
+    Comment:
+      title: Comment
+      description: Comment of a published photo.
+      type: object
+      properties:
+        id:
+          description: Comment unique identifier.
+          type: integer
+          example: 1234
+        content:
+          description: Text content of the comment.
+          type: string
+          example: Nice photo!
+        publisher:
+          description: User that published the comment
+          $ref: '#/components/schemas/User'
+
