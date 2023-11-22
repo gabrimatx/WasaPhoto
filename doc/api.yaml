@@ -7,6 +7,41 @@ info:
     email: matiddi.1985899@studenti.uniroma1.it
 
 paths:
+  /session:
+    post:
+      tags: ["login"]
+      summary: Logs in the user
+      description: |-
+        If the user does not exist, it will be created,
+        and an identifier is returned.
+        If the user exists, the user identifier is returned.
+      operationId: doLogin
+      requestBody:
+        description: User details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Maria
+                  pattern: 'ˆ.*?$'
+                  minLength: 3
+                  maxLength: 16
+      responses:
+        '201':
+          description: User log-in action successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identifier:
+                    # change here if you decide to use an integer
+                    # or any other type of identifier
+                    type: string
+                    example: "abcdef012345"
   /photos:
     post:
       operationId: uploadPhoto
@@ -57,6 +92,12 @@ components:
       name: photoId
       required: true
       schema:
+        type: integer
+    userId:
+      in: path
+      name: userId
+      required: true
+      schema: 
         type: integer
   schemas:
     User:
