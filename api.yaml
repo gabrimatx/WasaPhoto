@@ -1,28 +1,63 @@
-openapi: 3.0.0
-servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/GABRIMAT1/Wasa_API/1.0.0
+openapi: 3.0.2
 info:
   description: API for WasaPhoto project
   version: 1.0.0
   title: WasaPhoto API
   contact:
     email: matiddi.1985899@studenti.uniroma1.it
-  license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-tags:
-  - name: admins
-    description: Secured Admin-only calls
-  - name: developers
-    description: Operations available to regular developers
 
-
-
+paths:
+  /photos:
+    post:
+      operationId: uploadPhoto
+      summary: Upload a new photo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                  description: The caption of the photo
+                file:
+                  type: string
+                  format: binary
+                  description: The photo file
+      responses:
+        "201":
+          description: Photo uploaded successfully.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Photo" }
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error: "Invalid request. Please provide a caption and a photo file."
+  /photos/{photoId}:
+    delete:
+      operationId: deletePhoto
+      summary: Delete a photo that exists.
+      parameters:
+        - $ref: "#/components/parameters/photoId"
+      responses:
+        "201":
+          description: Photo deleted successfully.
+        "404":
+          description: Photo not found.
 
 
 components:
+  parameters:
+    photoId:
+      in: path
+      name: photoId
+      required: true
+      schema:
+        type: integer
   schemas:
     User:
       title: User
@@ -54,7 +89,7 @@ components:
           type: string
           description: Date and time of photo publication.
           format: date-time
-          example: '2016-08-29T09:12:33.001Z'
+          example: "2016-08-29T09:12:33.001Z"
         caption:
           description: Photo caption written by the user.
           type: string
@@ -66,7 +101,6 @@ components:
           description: Likes of the photo.
           type: integer
           example: 123
-
 
     Comment:
       title: Comment
@@ -83,5 +117,4 @@ components:
           example: Nice photo!
         publisher:
           description: User that published the comment
-          $ref: '#/components/schemas/User'
-
+          $ref: "#/components/schemas/User"
