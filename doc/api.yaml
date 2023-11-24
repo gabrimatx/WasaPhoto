@@ -83,6 +83,30 @@ paths:
           description: Photo deleted successfully.
         "404":
           description: Photo not found.
+  /photos/{photoId}/likes/:
+    put:
+      operationId: likePhoto
+      summary: Add a like to the photo.
+
+      responses:
+        "200":
+          description: Like successful.
+        "400":
+          description: Bad Request.
+        "404":
+          description: Photo not found.
+  /photos/{photoId}/likes/{likeId}:
+    delete:
+      operationId: unlikePhoto
+      summary: Remove like from the photo.
+      responses:
+        "200":
+          description: Unlike successful.
+        "400":
+          description: Bad Request.
+        "404":
+          description: Photo not found.
+
   /users/{userId}/:
     post:
       summary: Set username for a user.
@@ -105,11 +129,11 @@ paths:
                   type: string
                   description: New name for the user.
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad Request
-        '404':
+        "404":
           description: User not found
     delete:
       operationId: createUser
@@ -126,6 +150,24 @@ paths:
           description: Deleted
         "400":
           description: Bad Request
+        "404":
+          description: User not found
+    get:
+      summary: Get user profile by ID
+      description: Retrieve detailed information about a specific user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user to get.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
         "404":
           description: User not found
   /users/{userId}/follows/:
@@ -207,7 +249,6 @@ paths:
         "404":
           description: User not found
 
-
 components:
   parameters:
     photoId:
@@ -231,6 +272,12 @@ components:
     banId:
       in: path
       name: banId
+      required: true
+      schema:
+        type: integer
+    likeId:
+      in: path
+      name: likeId
       required: true
       schema:
         type: integer
