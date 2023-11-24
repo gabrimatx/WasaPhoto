@@ -83,10 +83,17 @@ paths:
           description: Photo deleted successfully.
         "404":
           description: Photo not found.
-  /users/:
-    put:
-      operationId: createUser
-      summary: Create new user profile.
+  /users/{userId}/:
+    post:
+      summary: Set username for a user.
+      operationId: setMyUserName
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user.
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -96,16 +103,14 @@ paths:
               properties:
                 username:
                   type: string
-                  description: Name of the new user.
+                  description: New name for the user.
       responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/User" }
-        "400":
+        '200':
+          description: OK
+        '400':
           description: Bad Request
-  /users/{userId}/:
+        '404':
+          description: User not found
     delete:
       operationId: createUser
       summary: Create new user profile.
@@ -123,7 +128,7 @@ paths:
           description: Bad Request
         "404":
           description: User not found
-  /user/{userId}/follows/:
+  /users/{userId}/follows/:
     put:
       summary: Follow a user.
       operationId: followUser
@@ -135,8 +140,8 @@ paths:
               type: object
               properties:
                 username:
-                  type: integer
-                  description: Id of the new followed user.
+                  type: string
+                  description: Name of the new followed user.
       responses:
         "200":
           description: Follow successful.
@@ -144,15 +149,15 @@ paths:
           description: Bad Request.
         "404":
           description: User not found.
-  /user/{userId}/follows/{userId}:
+  /users/{userId}/follows/{followId}:
     delete:
       summary: Unfollow a user.
       operationId: unfollowUser
       parameters:
-        - name: userId
+        - name: followId
           in: path
           required: true
-          description: ID of the user to unfollow.
+          description: ID of the follow to delete.
           schema:
             type: integer
       responses:
@@ -162,6 +167,46 @@ paths:
           description: Bad Request
         "404":
           description: User not found
+  /users/{userId}/bans/:
+    put:
+      summary: Ban a user.
+      operationId: banUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Name of the new banned user.
+      responses:
+        "200":
+          description: Ban successful.
+        "400":
+          description: Bad Request.
+        "404":
+          description: User not found.
+  /users/{userId}/bans/{banId}:
+    delete:
+      summary: Unban a user.
+      operationId: unbanUser
+      parameters:
+        - name: banId
+          in: path
+          required: true
+          description: ID of the ban to remove.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: User not found
+
 
 components:
   parameters:
@@ -174,6 +219,18 @@ components:
     userId:
       in: path
       name: userId
+      required: true
+      schema:
+        type: integer
+    followId:
+      in: path
+      name: followId
+      required: true
+      schema:
+        type: integer
+    banId:
+      in: path
+      name: banId
       required: true
       schema:
         type: integer
@@ -206,7 +263,6 @@ components:
           items:
             type: integer
             description: Ids of the users that are banned by the user.
-
     Photo:
       title: Photo
       description: This object represents a photo in the system.
@@ -238,7 +294,6 @@ components:
           description: Likes of the photo.
           type: integer
           example: 123
-
     Comment:
       title: Comment
       description: Comment of a published photo.
