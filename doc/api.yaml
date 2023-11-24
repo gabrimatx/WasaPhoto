@@ -87,7 +87,6 @@ paths:
     put:
       operationId: likePhoto
       summary: Add a like to the photo.
-
       responses:
         "200":
           description: Like successful.
@@ -105,7 +104,39 @@ paths:
         "400":
           description: Bad Request.
         "404":
+          description: Like not found.
+  /photos/{photoId}/comments/:
+    put:
+      operationId: commentPhoto
+      summary: Add a comment to the photo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: New comment for the photo.
+      responses:
+        "200":
+          description: Comment post successful.
+        "400":
+          description: Bad Request.
+        "404":
           description: Photo not found.
+  /photos/{photoId}/comments/{commentId}:
+    delete:
+      operationId: uncommentPhoto
+      summary: Remove comment from the photo.
+      responses:
+        "200":
+          description: Comment removal successful.
+        "400":
+          description: Bad Request.
+        "404":
+          description: Comment not found.
 
   /users/{userId}/:
     post:
@@ -155,6 +186,7 @@ paths:
     get:
       summary: Get user profile by ID
       description: Retrieve detailed information about a specific user.
+      operationId: getUserProfile
       parameters:
         - name: userId
           in: path
@@ -169,6 +201,26 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/User" }
         "404":
+          description: User not found
+  /users/{userId}/stream:
+    get:
+      summary: Get user's feed
+      description: Retrieve the feed of the specified user.
+      operationId: getMyStream
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                posts:
+                  - id: 1
+                    content: "This is a post."
+                    timestamp: "2023-11-24T12:00:00Z"
+                  - id: 2
+                    content: "Another post."
+                    timestamp: "2023-11-24T12:30:00Z"
+        '404':
           description: User not found
   /users/{userId}/follows/:
     put:
@@ -278,6 +330,12 @@ components:
     likeId:
       in: path
       name: likeId
+      required: true
+      schema:
+        type: integer
+    commentId:
+      in: path
+      name: commentId
       required: true
       schema:
         type: integer
