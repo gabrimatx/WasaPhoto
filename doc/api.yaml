@@ -51,6 +51,7 @@ paths:
         content:
           multipart/form-data:
             schema:
+              description: Photo specifications.
               type: object
               properties:
                 caption:
@@ -98,6 +99,8 @@ paths:
     delete:
       operationId: unlikePhoto
       summary: Remove like from the photo.
+      parameters:
+        - $ref: "#/components/parameters/likeId"
       responses:
         "200":
           description: Unlike successful.
@@ -114,11 +117,8 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  description: New comment for the photo.
+              type: string
+              description: New comment for the photo.
       responses:
         "200":
           description: Comment post successful.
@@ -130,6 +130,8 @@ paths:
     delete:
       operationId: uncommentPhoto
       summary: Remove comment from the photo.
+      parameters:
+        - $ref: "#/components/parameters/commentId"
       responses:
         "200":
           description: Comment removal successful.
@@ -143,22 +145,14 @@ paths:
       summary: Set username for a user.
       operationId: setMyUserName
       parameters:
-        - name: userId
-          in: path
-          required: true
-          description: ID of the user.
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/userId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  description: New name for the user.
+              type: string
+              description: New name for the user.
       responses:
         "200":
           description: OK
@@ -167,15 +161,10 @@ paths:
         "404":
           description: User not found
     delete:
-      operationId: createUser
-      summary: Create new user profile.
+      operationId: deleteUser
+      summary: Delete a user profile.
       parameters:
-        - name: userId
-          in: path
-          required: true
-          description: ID of the user to delete.
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/userId"
       responses:
         "201":
           description: Deleted
@@ -188,12 +177,7 @@ paths:
       description: Retrieve detailed information about a specific user.
       operationId: getUserProfile
       parameters:
-        - name: userId
-          in: path
-          required: true
-          description: ID of the user to get.
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/userId"
       responses:
         "200":
           description: Successful response
@@ -208,7 +192,7 @@ paths:
       description: Retrieve the feed of the specified user.
       operationId: getMyStream
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -220,7 +204,7 @@ paths:
                   - id: 2
                     content: "Another post."
                     timestamp: "2023-11-24T12:30:00Z"
-        '404':
+        "404":
           description: User not found
   /users/{userId}/follows/:
     put:
@@ -231,11 +215,8 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  description: Name of the new followed user.
+              type: string
+              description: Name of the new followed user.
       responses:
         "200":
           description: Follow successful.
@@ -248,12 +229,7 @@ paths:
       summary: Unfollow a user.
       operationId: unfollowUser
       parameters:
-        - name: followId
-          in: path
-          required: true
-          description: ID of the follow to delete.
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/followId"
       responses:
         "200":
           description: OK
@@ -270,11 +246,8 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  description: Name of the new banned user.
+              type: string
+              description: Name of the new banned user.
       responses:
         "200":
           description: Ban successful.
@@ -287,12 +260,7 @@ paths:
       summary: Unban a user.
       operationId: unbanUser
       parameters:
-        - name: banId
-          in: path
-          required: true
-          description: ID of the ban to remove.
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/banId"
       responses:
         "200":
           description: OK
@@ -308,36 +276,42 @@ components:
       name: photoId
       required: true
       schema:
+        description: Id of the photo.
         type: integer
     userId:
       in: path
       name: userId
       required: true
       schema:
+        description: Id of the user.
         type: integer
     followId:
       in: path
       name: followId
       required: true
       schema:
+        description: Id of the follow relation.
         type: integer
     banId:
       in: path
       name: banId
       required: true
       schema:
+        description: Id of the ban relation.
         type: integer
     likeId:
       in: path
       name: likeId
       required: true
       schema:
+        description: Id of the like on the photo.
         type: integer
     commentId:
       in: path
       name: commentId
       required: true
       schema:
+        description: Id of the comment on the photo.
         type: integer
   schemas:
     User:
@@ -414,4 +388,5 @@ components:
           example: Nice photo!
         publisher:
           description: User that published the comment
-          $ref: "#/components/schemas/User"
+          type: string
+          example: Gabriele
