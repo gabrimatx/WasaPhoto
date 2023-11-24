@@ -7,7 +7,7 @@ info:
     email: matiddi.1985899@studenti.uniroma1.it
 
 paths:
-  /session:
+  /session/:
     post:
       tags: ["login"]
       summary: Logs in the user
@@ -26,11 +26,11 @@ paths:
                 name:
                   type: string
                   example: Maria
-                  pattern: 'ˆ.*?$'
+                  pattern: "ˆ.*?$"
                   minLength: 3
                   maxLength: 16
       responses:
-        '201':
+        "201":
           description: User log-in action successful
           content:
             application/json:
@@ -42,8 +42,8 @@ paths:
                     # or any other type of identifier
                     type: string
                     example: "abcdef012345"
-  /photos:
-    post:
+  /photos/:
+    put:
       operationId: uploadPhoto
       summary: Upload a new photo
       requestBody:
@@ -72,7 +72,7 @@ paths:
             application/json:
               example:
                 error: "Invalid request. Please provide a caption and a photo file."
-  /photos/{photoId}:
+  /photos/{photoId}/:
     delete:
       operationId: deletePhoto
       summary: Delete a photo that exists.
@@ -83,7 +83,85 @@ paths:
           description: Photo deleted successfully.
         "404":
           description: Photo not found.
-
+  /users/:
+    put:
+      operationId: createUser
+      summary: Create new user profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Name of the new user.
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400":
+          description: Bad Request
+  /users/{userId}/:
+    delete:
+      operationId: createUser
+      summary: Create new user profile.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user to delete.
+          schema:
+            type: integer
+      responses:
+        "201":
+          description: Deleted
+        "400":
+          description: Bad Request
+        "404":
+          description: User not found
+  /user/{userId}/follows/:
+    put:
+      summary: Follow a user.
+      operationId: followUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: integer
+                  description: Id of the new followed user.
+      responses:
+        "200":
+          description: Follow successful.
+        "400":
+          description: Bad Request.
+        "404":
+          description: User not found.
+  /user/{userId}/follows/{userId}:
+    delete:
+      summary: Unfollow a user.
+      operationId: unfollowUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user to unfollow.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: User not found
 
 components:
   parameters:
@@ -97,7 +175,7 @@ components:
       in: path
       name: userId
       required: true
-      schema: 
+      schema:
         type: integer
   schemas:
     User:
@@ -107,10 +185,28 @@ components:
       required:
         - name
       properties:
+        id:
+          description: User identifier, uniquely generated.
+          type: integer
+          example: 32132131
+          readOnly: true
         name:
           description: Name of the user.
           type: string
           example: Gabriele Matiddi
+        followers:
+          description: Followers of the user.
+          type: array
+          items:
+            type: integer
+            description: Ids of the users that follow the user.
+        banned:
+          description: Users banned from profile of the user.
+          type: array
+          items:
+            type: integer
+            description: Ids of the users that are banned by the user.
+
     Photo:
       title: Photo
       description: This object represents a photo in the system.
