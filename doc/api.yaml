@@ -6,6 +6,7 @@ info:
   contact:
     email: matiddi.1985899@studenti.uniroma1.it
 
+
 paths:
   /session/:
     post:
@@ -43,7 +44,7 @@ paths:
                     type: string
                     example: "abcdef012345"
   /photos/:
-    put:
+    post:
       operationId: uploadPhoto
       summary: Upload a new photo
       requestBody:
@@ -84,10 +85,13 @@ paths:
           description: Photo deleted successfully.
         "404":
           description: Photo not found.
-  /photos/{photoId}/likes/:
+  /photos/{photoId}/likes/{likeId}:
     put:
       operationId: likePhoto
       summary: Add a like to the photo.
+      parameters:
+        - $ref: "#/components/parameters/photoId"
+        - $ref: "#/components/parameters/likeId"
       responses:
         "200":
           description: Like successful.
@@ -95,11 +99,11 @@ paths:
           description: Bad Request.
         "404":
           description: Photo not found.
-  /photos/{photoId}/likes/{likeId}:
     delete:
       operationId: unlikePhoto
       summary: Remove like from the photo.
       parameters:
+        - $ref: "#/components/parameters/photoId"
         - $ref: "#/components/parameters/likeId"
       responses:
         "200":
@@ -109,7 +113,7 @@ paths:
         "404":
           description: Like not found.
   /photos/{photoId}/comments/:
-    put:
+    post:
       operationId: commentPhoto
       summary: Add a comment to the photo.
       requestBody:
@@ -131,6 +135,7 @@ paths:
       operationId: uncommentPhoto
       summary: Remove comment from the photo.
       parameters:
+        - $ref: "#/components/parameters/photoId"
         - $ref: "#/components/parameters/commentId"
       responses:
         "200":
@@ -141,7 +146,7 @@ paths:
           description: Comment not found.
 
   /users/{userId}/:
-    post:
+    put:
       summary: Set username for a user.
       operationId: setMyUserName
       parameters:
@@ -191,6 +196,8 @@ paths:
       summary: Get user's feed
       description: Retrieve the feed of the specified user.
       operationId: getMyStream
+      parameters:
+        - $ref: "#/components/parameters/userId"
       responses:
         "200":
           description: Successful response
@@ -206,17 +213,13 @@ paths:
                     timestamp: "2023-11-24T12:30:00Z"
         "404":
           description: User not found
-  /users/{userId}/follows/:
+  /users/{userId}/follows/{followId}:
     put:
       summary: Follow a user.
       operationId: followUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: string
-              description: Name of the new followed user.
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/followId"
       responses:
         "200":
           description: Follow successful.
@@ -224,11 +227,11 @@ paths:
           description: Bad Request.
         "404":
           description: User not found.
-  /users/{userId}/follows/{followId}:
     delete:
       summary: Unfollow a user.
       operationId: unfollowUser
       parameters:
+        - $ref: "#/components/parameters/userId"
         - $ref: "#/components/parameters/followId"
       responses:
         "200":
@@ -237,17 +240,14 @@ paths:
           description: Bad Request
         "404":
           description: User not found
-  /users/{userId}/bans/:
+
+  /users/{userId}/bans/{banId}:
     put:
       summary: Ban a user.
       operationId: banUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: string
-              description: Name of the new banned user.
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/banId"
       responses:
         "200":
           description: Ban successful.
@@ -255,11 +255,11 @@ paths:
           description: Bad Request.
         "404":
           description: User not found.
-  /users/{userId}/bans/{banId}:
     delete:
       summary: Unban a user.
       operationId: unbanUser
       parameters:
+        - $ref: "#/components/parameters/userId"
         - $ref: "#/components/parameters/banId"
       responses:
         "200":
@@ -290,21 +290,21 @@ components:
       name: followId
       required: true
       schema:
-        description: Id of the follow relation.
+        description: Id of the user at the end of the follow relation.
         type: integer
     banId:
       in: path
       name: banId
       required: true
       schema:
-        description: Id of the ban relation.
+        description: Id of the banned user.
         type: integer
     likeId:
       in: path
       name: likeId
       required: true
       schema:
-        description: Id of the like on the photo.
+        description: Id of the like (userId that put the like) on the photo.
         type: integer
     commentId:
       in: path
@@ -313,6 +313,11 @@ components:
       schema:
         description: Id of the comment on the photo.
         type: integer
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: string    # optional, arbitrary value for documentation purposes
   schemas:
     User:
       title: User
@@ -390,3 +395,6 @@ components:
           description: User that published the comment
           type: string
           example: Gabriele
+
+security:
+  - bearerAuth: [] 
