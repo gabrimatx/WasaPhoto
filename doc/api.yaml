@@ -54,15 +54,19 @@ paths:
             application/json:
               schema:
                 type: object
+                description: Log in success response
                 properties:
                   identifier:
                     # change here if you decide to use an integer
                     # or any other type of identifier
                     type: string
                     example: "abcdef012345"
+                    description: Identifier of the log in
   /photos/:
     post:
       operationId: uploadPhoto
+      description: -|
+        New photo upload, multiple photos possible.
       summary: Upload a new photo
       tags:
         - photos
@@ -103,6 +107,7 @@ paths:
   /photos/{photoId}/:
     delete:
       operationId: deletePhoto
+      description: Delete photo operation that requires the id of the photo to be deleted.
       summary: Delete a photo that exists.
       tags:
         - photos
@@ -124,12 +129,13 @@ paths:
   /photos/{photoId}/likes/{likeId}:
     put:
       operationId: likePhoto
+      description: Put a like with the identifier of the user that put the like.
       summary: Add a like to the photo.
       tags:
         - likes
       parameters:
         - $ref: "#/components/parameters/photoId"
-        - $ref: "#/components/parameters/likeId"
+        - $ref: "#/components/parameters/userId"
       responses:
         "201":
           description: Like successful.
@@ -146,12 +152,13 @@ paths:
           $ref: "#/components/responses/NotFound"
     delete:
       operationId: unlikePhoto
+      description: Remove like from the photo liked by the user.
       summary: Remove like from the photo.
       tags:
         - likes
       parameters:
         - $ref: "#/components/parameters/photoId"
-        - $ref: "#/components/parameters/likeId"
+        - $ref: "#/components/parameters/userId"
       responses:
         "200":
           description: OK
@@ -166,9 +173,12 @@ paths:
   /photos/{photoId}/comments/:
     post:
       operationId: commentPhoto
+      description: Post a comment to the photo browsed.
       summary: Add a comment to the photo.
       tags:
         - comments
+      parameters:
+        - $ref: "#/components/parameters/photoId"
       requestBody:
         required: true
         content:
@@ -196,6 +206,7 @@ paths:
   /photos/{photoId}/comments/{commentId}:
     delete:
       operationId: uncommentPhoto
+      description: Delete a comment from the photo browsed via its unique identifier.
       summary: Remove comment from the photo.
       tags:
         - comments
@@ -216,6 +227,7 @@ paths:
 
   /users/{userId}/:
     put:
+      description: Set a new username for the user if the necessary authorization is present.
       summary: Set username for a user.
       operationId: setMyUserName
       tags:
@@ -250,6 +262,7 @@ paths:
           $ref: "#/components/responses/NotFound"
     delete:
       operationId: deleteUser
+      description: Delete user if the necessary authorization is present.
       summary: Delete a user profile.
       tags:
         - users
@@ -281,7 +294,9 @@ paths:
           description: Successful response
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/User" }
+              schema: 
+                description: User returned
+                $ref: "#/components/schemas/User" 
         "404":
           description: Not Found response.
           $ref: "#/components/responses/NotFound"
@@ -314,13 +329,14 @@ paths:
           $ref: "#/components/responses/NotFound"
   /users/{userId}/follows/{followId}:
     put:
+      description: Put a follow with the id of the user followed in the follows of the user.
       summary: Follow a user.
       operationId: followUser
       tags:
         - follows
       parameters:
         - $ref: "#/components/parameters/userId"
-        - $ref: "#/components/parameters/followId"
+        - $ref: "#/components/parameters/userId"
       responses:
         "201":
           description: Follow successful.
@@ -336,13 +352,14 @@ paths:
           description: Not Found response.
           $ref: "#/components/responses/NotFound"
     delete:
+      description: Delete the follow from the follows of the user selected.
       summary: Unfollow a user.
       operationId: unfollowUser
       tags:
         - follows
       parameters:
         - $ref: "#/components/parameters/userId"
-        - $ref: "#/components/parameters/followId"
+        - $ref: "#/components/parameters/userId"
       responses:
         "200":
           description: OK
@@ -357,13 +374,14 @@ paths:
 
   /users/{userId}/bans/{banId}:
     put:
+      description: Put a ban with the id of the user banned in the list of the bans.
       summary: Ban a user.
       operationId: banUser
       tags:
         - bans
       parameters:
         - $ref: "#/components/parameters/userId"
-        - $ref: "#/components/parameters/banId"
+        - $ref: "#/components/parameters/userId"
       responses:
         "201":
           description: Ban successful.
@@ -379,13 +397,14 @@ paths:
           description: Not Found response.
           $ref: "#/components/responses/NotFound"
     delete:
+      description: Delete the ban via user id from the ban list of the user.
       summary: Unban a user.
       operationId: unbanUser
       tags:
         - bans
       parameters:
         - $ref: "#/components/parameters/userId"
-        - $ref: "#/components/parameters/banId"
+        - $ref: "#/components/parameters/userId"
       responses:
         "200":
           description: OK
@@ -444,20 +463,6 @@ components:
       schema:
         description: Id of the user at the end of the follow relation.
         type: integer
-    banId:
-      in: path
-      name: banId
-      required: true
-      schema:
-        description: Id of the banned user.
-        type: integer
-    likeId:
-      in: path
-      name: likeId
-      required: true
-      schema:
-        description: Id of the like (userId that put the like) on the photo.
-        type: integer
     commentId:
       in: path
       name: commentId
@@ -501,7 +506,7 @@ components:
       description: User profile of a user.
       type: object
       required:
-        - name
+        - id
       properties:
         id:
           description: User identifier, uniquely generated.
@@ -512,18 +517,6 @@ components:
           description: Name of the user.
           type: string
           example: Gabriele Matiddi
-        followers:
-          description: Followers of the user.
-          type: array
-          items:
-            type: integer
-            description: Ids of the users that follow the user.
-        banned:
-          description: Users banned from profile of the user.
-          type: array
-          items:
-            type: integer
-            description: Ids of the users that are banned by the user.
     Photo:
       title: Photo
       description: This object represents a photo in the system.
