@@ -6,7 +6,18 @@ info:
   contact:
     email: matiddi.1985899@studenti.uniroma1.it
 
-
+tags:
+  - name: photos
+    description: All related to photos
+  - name: users
+    description: All related to users
+  - name: comments
+    description: All related to comments
+  - name: likes
+    description: All related to likes
+  - name: bans 
+    description: All related to bans
+    
 paths:
   /session/:
     post:
