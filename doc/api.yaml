@@ -510,14 +510,14 @@ components:
           description: Message of the error.
           minLength: 0
           maxLength: 1000
-          example: "Error photo not found"
+          example: "Error element not found"
           pattern: "*"
       required:
         - code
         - message
     SuccessfulRemovalMessage:
       type: string
-      example: "Photo Removed"
+      example: "Element Removed"
       description: Message returned after removing something
       minLength: 0
       maxLength: 10000
