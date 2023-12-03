@@ -574,12 +574,11 @@ components:
           pattern: "*"
           minLength: 0
           maxLength: 100
-        publisher:
-          description: Publisher of the photo.
-          type: string
-          pattern: "*"
-          minLength: 0
-          maxLength: 100
+        publisherId:
+          description: Id of the Publisher of the photo.
+          type: integer
+          example: 123
+          readOnly: true
         likes:
           description: Likes of the photo.
           type: integer
@@ -593,6 +592,7 @@ components:
           description: Comment unique identifier.
           type: integer
           example: 1234
+          readOnly: true
         text_comment:
           description: Text content of the comment.
           type: string
