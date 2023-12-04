@@ -5,6 +5,9 @@ info:
   title: WasaPhoto API
   contact:
     email: matiddi.1985899@studenti.uniroma1.it
+  
+servers:
+  - url: https://localhost:3000
 
 tags:
   - name: photos
@@ -583,6 +586,15 @@ components:
           description: Likes of the photo.
           type: integer
           example: 123
+    PhotoList:
+      title: PhotoList
+      description: list of Photos
+      type: array
+      items:
+        $ref: "#/components/schemas/Photo"
+      minItems: 0
+      maxItems: 1000
+      example: [photo 1]
     Comment:
       title: Comment
       description: Comment of a published photo.
@@ -592,6 +604,16 @@ components:
           description: Comment unique identifier.
           type: integer
           example: 1234
+          readOnly: true
+        photoId:
+          description: Photo unique identifier where the comment belongs.
+          type: integer
+          example: 1234
+          readOnly: true
+        userId:
+          description: User identifier for the user that published the comment.
+          type: integer
+          example: 1324
           readOnly: true
         text_comment:
           description: Text content of the comment.

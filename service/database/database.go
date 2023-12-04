@@ -34,6 +34,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"go/doc/comment"
+
+	"github.com/gabrimatx/wasa-photo/api"
 )
 
 // AppDatabase is the high level interface for the DB
@@ -41,7 +44,35 @@ type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
 
-	Ping() error
+	//photos
+	UploadPhoto(Photo p) (Photo, error)
+	DeletePhoto(int id) (string, error)
+
+	//users
+	SetUsername(int userId, string new_username) (string, error)
+	DeleteUser(int userId) (string, error)
+	GetUser(int userId) (User, error)
+	GetUserStream(int userId) (PhotoList, error)
+
+	//comments
+	AddComment(int photoId) (Comment, error)
+	DeleteComment(int photoId, int commentId) (string, error)
+
+	//likes
+	LikePhoto(int IdPhoto, int UserLikeId) (string, error)
+	DeleteLike(int IdPhoto, int UserLikeId) (string, error)
+
+	//follows
+	FollowUser(int IdUserToFollow, int IdFollowingUser) (string, error)
+	DeleteFollow(int IdUserToNotFollow, int IdFollowingUser) (string, error)
+
+	//bans
+	BanUser(int IdUserToBan, int IdUser) (string, error)
+	DeleteFollow(int IdUserToUnban, int IdUser) (string, error)
+
+	//login
+	Login(string Name) (string, error)
+
 }
 
 type appdbimpl struct {
@@ -57,20 +88,74 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
-	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
+
+	tableName = "Photos"
+	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
-		sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
+		sqlStmt := `CREATE TABLE Photos (
+					Id INT NOT NULL,
+					file TEXT,
+					releaseDate VARCHAR(10),
+					caption TEXT,
+					publisherId INT,
+					likes INT,
+					PRIMARY KEY (Id),
+					FOREIGN KEY (publisherId) REFERENCES Users(Id)
+		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)
 		}
 	}
 
+	tableName = "Users"
+	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	if errors.Is(err, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE Users (
+					Id INT NOT NULL,
+					file VARCHAR(100),
+					PRIMARY KEY (Id)
+		); `
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	tableName = "Comments"
+	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	if errors.Is(err, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE Comments (
+					Id INT NOT NULL,
+					photoId INT,
+					userId INT,
+					text_comment TEXT,
+					PRIMARY KEY (Id),
+					FOREIGN KEY (userId) REFERENCES Users(Id),
+					FOREIGN KEY (photoId) REFERENCES Photos(Id)
+		); `
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	tableName = "Likes"
+	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	if errors.Is(err, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE Likes (
+					photoId INT,
+					userId INT,
+					PRIMARY KEY (photoId, userId),
+					FOREIGN KEY (userId) REFERENCES Users(Id),
+					FOREIGN KEY (photoId) REFERENCES Photos(Id)
+		); `
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
 	return &appdbimpl{
 		c: db,
 	}, nil
-}
-
-func (db *appdbimpl) Ping() error {
-	return db.c.Ping()
 }

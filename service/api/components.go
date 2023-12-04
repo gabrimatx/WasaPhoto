@@ -21,5 +21,11 @@ type Photo struct {
 
 type Comment struct {
 	ID           int
+	photoId      int
+	userId       int
 	text_comment string
+}
+
+type PhotoList struct {
+	PhotoList []Photo
 }
