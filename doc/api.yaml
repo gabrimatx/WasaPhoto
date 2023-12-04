@@ -68,6 +68,36 @@ paths:
                     minLength: 0
                     maxLength: 15
                     pattern: "*"
+    get:
+      summary: Get user profile by name
+      description: Retrieve user Id.
+      operationId: getUserProfile
+      tags:
+        - users
+      requestBody:
+        required: true
+        description: Request for user id.
+        content:
+          application/json:
+            schema:
+              description: Username to log.
+              type: string
+              example: RubenCiranni
+              minLength: 0
+              maxLength: 15
+              pattern: "*"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                description: User id returned.
+                type: integer
+                example: 123
+        "404":
+          description: Not Found response.
+          $ref: "#/components/responses/NotFound"
   /photos/:
     post:
       operationId: uploadPhoto
@@ -298,23 +328,7 @@ paths:
         "404":
           description: Not Found response.
           $ref: "#/components/responses/NotFound"
-    get:
-      summary: Get user profile by ID
-      description: Retrieve detailed information about a specific user.
-      operationId: getUserProfile
-      tags:
-        - users
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                description: User returned
-                $ref: "#/components/schemas/User"
-        "404":
-          description: Not Found response.
-          $ref: "#/components/responses/NotFound"
+
 
   /users/{userId}/stream:
     get:

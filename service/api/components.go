@@ -7,7 +7,7 @@ type Error struct {
 
 type User struct {
 	Id   int
-	name string
+	Name string
 }
 
 type Photo struct {
@@ -21,9 +21,9 @@ type Photo struct {
 
 type Comment struct {
 	Id           int
-	photoId      int
-	userId       int
-	text_comment string
+	PhotoId      int
+	UserId       int
+	Text_Comment string
 }
 
 type PhotoList struct {

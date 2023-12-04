@@ -48,14 +48,14 @@ type AppDatabase interface {
 	DeletePhoto(id int) error
 
 	//users
-	SetUsername(userId int, new_username string) (string, error)
-	DeleteUser(userId int) (string, error)
-	GetUser(userId int) (api.User, error)
-	GetUserStream(userId int) (api.PhotoList, error)
+	SetUsername(UserId int, new_username string) error
+	DeleteUser(UserId int) error
+	GetUser(Username string) (int, error)
+	GetUserStream(UserId int) (api.PhotoList, error)
 
 	//comments
-	AddComment(photoId int) (api.Comment, error)
-	DeleteComment(photoId int, commentId int) (string, error)
+	AddComment(PhotoId int) (api.Comment, error)
+	DeleteComment(PhotoId int, commentId int) (string, error)
 
 	//Likes
 	LikePhoto(IdPhoto int, UserLikeId int) (string, error)
@@ -111,7 +111,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Users (
 					Id INT NOT NULL,
-					file VARCHAR(100),
+					Name VARCHAR(100),
 					PRIMARY KEY (Id)
 		); `
 		_, err = db.Exec(sqlStmt)
@@ -125,12 +125,12 @@ func New(db *sql.DB) (AppDatabase, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Comments (
 					Id INT NOT NULL,
-					photoId INT,
-					userId INT,
-					text_comment TEXT,
+					PhotoId INT,
+					UserId INT,
+					Text_Comment TEXT,
 					PRIMARY KEY (Id),
-					FOREIGN KEY (userId) REFERENCES Users(Id),
-					FOREIGN KEY (photoId) REFERENCES Photos(Id)
+					FOREIGN KEY (UserId) REFERENCES Users(Id),
+					FOREIGN KEY (PhotoId) REFERENCES Photos(Id)
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -142,11 +142,11 @@ func New(db *sql.DB) (AppDatabase, error) {
 	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Likes (
-					photoId INT,
-					userId INT,
-					PRIMARY KEY (photoId, userId),
-					FOREIGN KEY (userId) REFERENCES Users(Id),
-					FOREIGN KEY (photoId) REFERENCES Photos(Id)
+					PhotoId INT,
+					UserId INT,
+					PRIMARY KEY (PhotoId, UserId),
+					FOREIGN KEY (UserId) REFERENCES Users(Id),
+					FOREIGN KEY (PhotoId) REFERENCES Photos(Id)
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
