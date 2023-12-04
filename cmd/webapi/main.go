@@ -35,9 +35,9 @@ import (
 	"syscall"
 
 	"github.com/ardanlabs/conf"
-	"github.com/gabrimatx/wasa-photo/service/api"
-	"github.com/gabrimatx/wasa-photo/service/database"
-	"github.com/gabrimatx/wasa-photo/service/globaltime"
+	"github.com/gabrimatx/WasaPhoto/service/api"
+	"github.com/gabrimatx/WasaPhoto/service/database"
+	"github.com/gabrimatx/WasaPhoto/service/globaltime"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sirupsen/logrus"
 )

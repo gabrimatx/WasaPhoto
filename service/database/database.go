@@ -34,9 +34,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"go/doc/comment"
 
-	"github.com/gabrimatx/wasa-photo/api"
+	"github.com/gabrimatx/WasaPhoto/service/api"
 )
 
 // AppDatabase is the high level interface for the DB
@@ -45,34 +44,33 @@ type AppDatabase interface {
 	SetName(name string) error
 
 	//photos
-	UploadPhoto(Photo p) (Photo, error)
-	DeletePhoto(int id) (string, error)
+	UploadPhoto(photo api.Photo) (api.Photo, error)
+	DeletePhoto(id int) error
 
 	//users
-	SetUsername(int userId, string new_username) (string, error)
-	DeleteUser(int userId) (string, error)
-	GetUser(int userId) (User, error)
-	GetUserStream(int userId) (PhotoList, error)
+	SetUsername(userId int, new_username string) (string, error)
+	DeleteUser(userId int) (string, error)
+	GetUser(userId int) (api.User, error)
+	GetUserStream(userId int) (api.PhotoList, error)
 
 	//comments
-	AddComment(int photoId) (Comment, error)
-	DeleteComment(int photoId, int commentId) (string, error)
+	AddComment(photoId int) (api.Comment, error)
+	DeleteComment(photoId int, commentId int) (string, error)
 
-	//likes
-	LikePhoto(int IdPhoto, int UserLikeId) (string, error)
-	DeleteLike(int IdPhoto, int UserLikeId) (string, error)
+	//Likes
+	LikePhoto(IdPhoto int, UserLikeId int) (string, error)
+	DeleteLike(IdPhoto int, UserLikeId int) (string, error)
 
 	//follows
-	FollowUser(int IdUserToFollow, int IdFollowingUser) (string, error)
-	DeleteFollow(int IdUserToNotFollow, int IdFollowingUser) (string, error)
+	FollowUser(IdUserToFollow int, IdFollowingUser int) (string, error)
+	DeleteFollow(IdUserToNotFollow int, IdFollowingUser int) (string, error)
 
 	//bans
-	BanUser(int IdUserToBan, int IdUser) (string, error)
-	DeleteFollow(int IdUserToUnban, int IdUser) (string, error)
+	BanUser(IdUserToBan int, IdUser int) (string, error)
+	DeleteBan(IdUserToUnban int, IdUser int) (string, error)
 
 	//login
-	Login(string Name) (string, error)
-
+	Login(Name string) (string, error)
 }
 
 type appdbimpl struct {
@@ -94,13 +92,13 @@ func New(db *sql.DB) (AppDatabase, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Photos (
 					Id INT NOT NULL,
-					file TEXT,
-					releaseDate VARCHAR(10),
-					caption TEXT,
-					publisherId INT,
-					likes INT,
+					File TEXT,
+					ReleaseDate VARCHAR(10),
+					Caption TEXT,
+					PublisherId INT,
+					Likes INT,
 					PRIMARY KEY (Id),
-					FOREIGN KEY (publisherId) REFERENCES Users(Id)
+					FOREIGN KEY (PublisherId) REFERENCES Users(Id)
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -109,7 +107,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Users"
-	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Users (
 					Id INT NOT NULL,
@@ -123,7 +121,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Comments"
-	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Comments (
 					Id INT NOT NULL,
@@ -141,7 +139,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Likes"
-	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Likes (
 					photoId INT,
@@ -154,7 +152,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)
 		}
-
+	}
 	return &appdbimpl{
 		c: db,
 	}, nil

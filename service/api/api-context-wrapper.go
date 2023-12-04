@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/gabrimatx/wasa-photo/service/api/reqcontext"
+	"github.com/gabrimatx/WasaPhoto/service/api/reqcontext"
 	"github.com/gofrs/uuid"
 	"github.com/julienschmidt/httprouter"
 	"github.com/sirupsen/logrus"

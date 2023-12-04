@@ -1,4 +1,4 @@
-module github.com/gabrimatx/wasa-photo
+module github.com/gabrimatx/WasaPhoto
 
 go 1.17
 

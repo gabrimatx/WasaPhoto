@@ -85,9 +85,9 @@ paths:
               description: Photo specifications.
               type: object
               properties:
-                caption:
+                Caption:
                   type: string
-                  description: The caption of the photo
+                  description: The Caption of the photo
                   example: Nice day today!
                   minLength: 0
                   maxLength: 1000
@@ -562,7 +562,7 @@ components:
           minLength: 0
           maxLength: 1000000
           pattern: "*"
-        releaseDate:
+        ReleaseDate:
           type: string
           description: Date and time of photo publication.
           format: date-time
@@ -570,14 +570,14 @@ components:
           pattern: "*"
           minLength: 0
           maxLength: 30
-        caption:
-          description: Photo caption written by the user.
+        Caption:
+          description: Photo Caption written by the user.
           type: string
           example: Bella giornata!
           pattern: "*"
           minLength: 0
           maxLength: 100
-        publisherId:
+        PublisherId:
           description: Id of the Publisher of the photo.
           type: integer
           example: 123

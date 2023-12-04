@@ -6,21 +6,21 @@ type Error struct {
 }
 
 type User struct {
-	ID   int
+	Id   int
 	name string
 }
 
 type Photo struct {
-	ID          int
-	file        string
-	releaseDate string
-	caption     string
-	publisherId int
-	likes       int
+	Id          int
+	File        string
+	ReleaseDate string
+	Caption     string
+	PublisherId int
+	Likes       int
 }
 
 type Comment struct {
-	ID           int
+	Id           int
 	photoId      int
 	userId       int
 	text_comment string
