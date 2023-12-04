@@ -54,7 +54,7 @@ type AppDatabase interface {
 	GetUserStream(UserId int) (api.PhotoList, error)
 
 	//comments
-	AddComment(PhotoId int) (api.Comment, error)
+	AddComment(PhotoId int, Commnt api.Comment) error
 	DeleteComment(PhotoId int, commentId int) (string, error)
 
 	//Likes
@@ -147,6 +147,38 @@ func New(db *sql.DB) (AppDatabase, error) {
 					PRIMARY KEY (PhotoId, UserId),
 					FOREIGN KEY (UserId) REFERENCES Users(Id),
 					FOREIGN KEY (PhotoId) REFERENCES Photos(Id)
+		); `
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	tableName = "Follows"
+	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	if errors.Is(err, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE Follows (
+					FollowerId INT,
+					FollowedId INT,
+					PRIMARY KEY (FollowerId, FollowedId),
+					FOREIGN KEY (FollowerId) REFERENCES Users(Id),
+					FOREIGN KEY (FollowedId) REFERENCES Users(Id)
+		); `
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	tableName = "Bans"
+	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	if errors.Is(err, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE Bans (
+					BannerId INT,
+					BannedId INT,
+					PRIMARY KEY (BannerId, BannedId),
+					FOREIGN KEY (BannerId) REFERENCES Users(Id),
+					FOREIGN KEY (BannedId) REFERENCES Users(Id)
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {

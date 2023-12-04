@@ -27,5 +27,5 @@ type Comment struct {
 }
 
 type PhotoList struct {
-	PhotoList []Photo
+	PList []Photo
 }
