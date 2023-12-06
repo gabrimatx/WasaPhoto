@@ -67,7 +67,7 @@ type AppDatabase interface {
 	DeleteBan(IdUserToUnban int, IdUser int) error
 
 	//login
-	Login(Name string) (string, error)
+	Login(Name string) (int, error)
 }
 
 type appdbimpl struct {
