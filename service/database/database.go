@@ -59,8 +59,8 @@ type AppDatabase interface {
 	DeleteLike(IdPhoto int, UserLikeId int) error
 
 	//follows
-	FollowUser(IdUserToFollow int, IdFollowingUser int) (string, error)
-	DeleteFollow(IdUserToNotFollow int, IdFollowingUser int) (string, error)
+	FollowUser(IdUserToFollow int, IdFollowingUser int) error
+	DeleteFollow(IdUserToNotFollow int, IdFollowingUser int) error
 
 	//bans
 	BanUser(IdUserToBan int, IdUser int) (string, error)
