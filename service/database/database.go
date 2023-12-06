@@ -40,9 +40,6 @@ import (
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
-	GetName() (string, error)
-	SetName(name string) error
-
 	//photos
 	UploadPhoto(photo components.Photo) (components.Photo, error)
 	DeletePhoto(id int) error
@@ -55,7 +52,7 @@ type AppDatabase interface {
 
 	//comments
 	AddComment(Commnt components.Comment) error
-	DeleteComment(commentId int) (string, error)
+	DeleteComment(commentId int) error
 
 	//Likes
 	LikePhoto(IdPhoto int, UserLikeId int) (string, error)
