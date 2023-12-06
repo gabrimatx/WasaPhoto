@@ -55,8 +55,8 @@ type AppDatabase interface {
 	DeleteComment(commentId int) error
 
 	//Likes
-	LikePhoto(IdPhoto int, UserLikeId int) (string, error)
-	DeleteLike(IdPhoto int, UserLikeId int) (string, error)
+	LikePhoto(IdPhoto int, UserLikeId int) error
+	DeleteLike(IdPhoto int, UserLikeId int) error
 
 	//follows
 	FollowUser(IdUserToFollow int, IdFollowingUser int) (string, error)
