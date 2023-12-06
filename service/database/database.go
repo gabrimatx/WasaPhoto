@@ -63,8 +63,8 @@ type AppDatabase interface {
 	DeleteFollow(IdUserToNotFollow int, IdFollowingUser int) error
 
 	//bans
-	BanUser(IdUserToBan int, IdUser int) (string, error)
-	DeleteBan(IdUserToUnban int, IdUser int) (string, error)
+	BanUser(IdUserToBan int, IdUser int) error
+	DeleteBan(IdUserToUnban int, IdUser int) error
 
 	//login
 	Login(Name string) (string, error)
