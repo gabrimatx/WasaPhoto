@@ -5,8 +5,8 @@ persistent database are handled here. Database specific logic should never escap
 To use this package you need to apply migrations to the database if needed/wanted, connect to it (using the database
 data source name from config), and then initialize an instance of AppDatabase from the DB connection.
 
-For example, this code adds a parameter in `webapi` executable for the database data source name (add it to the
-main.WebAPIConfiguration structure):
+For example, this code adds a parameter in `webcomponents` executable for the database data source name (add it to the
+main.WebcomponentsConfiguration structure):
 
 	DB struct {
 		Filename string `conf:""`
@@ -26,7 +26,7 @@ This is an example on how to migrate the DB and connect to it:
 		_ = db.Close()
 	}()
 
-Then you can initialize the AppDatabase and pass it to the api package.
+Then you can initialize the AppDatabase and pass it to the components package.
 */
 package database
 
@@ -35,7 +35,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gabrimatx/WasaPhoto/service/api"
+	components "github.com/gabrimatx/WasaPhoto/service"
 )
 
 // AppDatabase is the high level interface for the DB
@@ -44,18 +44,18 @@ type AppDatabase interface {
 	SetName(name string) error
 
 	//photos
-	UploadPhoto(photo api.Photo) (api.Photo, error)
+	UploadPhoto(photo components.Photo) (components.Photo, error)
 	DeletePhoto(id int) error
 
 	//users
 	SetUsername(UserId int, new_username string) error
 	DeleteUser(UserId int) error
 	GetUser(Username string) (int, error)
-	GetUserStream(UserId int) (api.PhotoList, error)
+	GetUserStream(UserId int) (components.PhotoList, error)
 
 	//comments
-	AddComment(PhotoId int, Commnt api.Comment) error
-	DeleteComment(PhotoId int, commentId int) (string, error)
+	AddComment(Commnt components.Comment) error
+	DeleteComment(commentId int) (string, error)
 
 	//Likes
 	LikePhoto(IdPhoto int, UserLikeId int) (string, error)

@@ -1,4 +1,4 @@
-package api
+package handlers
 
 import (
 	"encoding/json"
@@ -20,5 +20,4 @@ func uploadPhotoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: Implement your logic to store the new photo in the database or handle as needed
 
-	writeJSONResponse(w, newPhoto, http.StatusCreated)
 }

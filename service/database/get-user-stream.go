@@ -1,8 +1,10 @@
 package database
 
-import "github.com/gabrimatx/WasaPhoto/service/api"
+import (
+	components "github.com/gabrimatx/WasaPhoto/service"
+)
 
-func (db *appdbimpl) GetUserStream(UserId int) (api.PhotoList, error) {
+func (db *appdbimpl) GetUserStream(UserId int) (components.PhotoList, error) {
 	rows, err := db.c.Query(
 		`
 		SELECT * 
@@ -13,12 +15,15 @@ func (db *appdbimpl) GetUserStream(UserId int) (api.PhotoList, error) {
 			WHERE UserId = FollowerId AND UserId = ?
 		)
 		ORDER BY ReleaseDate
-
 		`, UserId)
 	defer rows.Close()
-	var to_return api.PhotoList
+	var ToReturn components.PhotoList
 	for rows.Next() {
-
+		var TempPhoto components.Photo
+		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.File, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
+			return ToReturn, err
+		}
+		ToReturn.PList = append(ToReturn.PList, TempPhoto)
 	}
-	return photo, err
+	return ToReturn, err
 }

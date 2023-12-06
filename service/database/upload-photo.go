@@ -3,11 +3,11 @@ package database
 import (
 	"time"
 
-	"github.com/gabrimatx/WasaPhoto/service/api"
+	components "github.com/gabrimatx/WasaPhoto/service"
 )
 
 // GetName is an example that shows you how to query data
-func (db *appdbimpl) UploadPhoto(photo api.Photo) (api.Photo, error) {
+func (db *appdbimpl) UploadPhoto(photo components.Photo) (components.Photo, error) {
 	currentTime := time.Now()
 	_, err := db.c.Exec(
 		"INSERT INTO Photos(Id, File, ReleaseDate, Caption, PublisherId, Likes) VALUES (?, ?, ?, ?, ?, 0)",
