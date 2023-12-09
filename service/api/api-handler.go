@@ -10,6 +10,9 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/", rt.getHelloWorld)
 	rt.router.GET("/context", rt.wrap(rt.getContextReply))
 
+	//Follows
+	rt.router.PUT("/users/{userId}/follows/{followId}", rt.wrap(rt.followUser))
+
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)
 
