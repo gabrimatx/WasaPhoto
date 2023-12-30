@@ -87,7 +87,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Photo"
-              description: Photo to upload
       responses:
         "201":
           $ref: "#/components/responses/Created"
