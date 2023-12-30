@@ -89,7 +89,6 @@ func New(db *sql.DB) (AppDatabase, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Photos (
 					Id INT NOT NULL,
-					File TEXT,
 					ReleaseDate VARCHAR(10),
 					Caption TEXT,
 					PublisherId INT,
