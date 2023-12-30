@@ -12,7 +12,6 @@ type User struct {
 
 type Photo struct {
 	Id          int
-	File        string
 	ReleaseDate string
 	Caption     string
 	PublisherId int

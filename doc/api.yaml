@@ -473,7 +473,7 @@ components:
         $ref: "#/components/schemas/Photo"
       minItems: 0
       maxItems: 1000
-      example: [photo 1]
+      #Missing example
     Comment:
       title: Comment
       description: Comment of a published photo.
