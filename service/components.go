@@ -6,12 +6,10 @@ type Error struct {
 }
 
 type User struct {
-	Id   int
 	Name string
 }
 
 type Photo struct {
-	Id          int
 	ReleaseDate string
 	Caption     string
 	PublisherId int
@@ -19,7 +17,6 @@ type Photo struct {
 }
 
 type Comment struct {
-	Id           int
 	PhotoId      int
 	UserId       int
 	Text_Comment string

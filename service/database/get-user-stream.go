@@ -20,7 +20,8 @@ func (db *appdbimpl) GetUserStream(UserId int) (components.PhotoList, error) {
 	var ToReturn components.PhotoList
 	for rows.Next() {
 		var TempPhoto components.Photo
-		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
+		var placeholderId int
+		if err := rows.Scan(&placeholderId, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
 			return ToReturn, err
 		}
 		ToReturn.PList = append(ToReturn.PList, TempPhoto)
