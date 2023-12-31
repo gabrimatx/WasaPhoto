@@ -1,6 +1,6 @@
 package database
 
-func (db *appdbimpl) SetUsername(UserId int, new_username string) error {
+func (db *appdbimpl) SetUsername(UserId uint64, new_username string) error {
 	_, err := db.c.Exec(
 		`UPDATE Users 
 	     SET Name = ?

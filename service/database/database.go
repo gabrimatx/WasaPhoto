@@ -1,33 +1,3 @@
-/*
-Package database is the middleware between the app database and the code. All data (de)serialization (save/load) from a
-persistent database are handled here. Database specific logic should never escape this package.
-
-To use this package you need to apply migrations to the database if needed/wanted, connect to it (using the database
-data source name from config), and then initialize an instance of AppDatabase from the DB connection.
-
-For example, this code adds a parameter in `webcomponents` executable for the database data source name (add it to the
-main.WebcomponentsConfiguration structure):
-
-	DB struct {
-		Filename string `conf:""`
-	}
-
-This is an example on how to migrate the DB and connect to it:
-
-	// Start Database
-	logger.Println("initializing database support")
-	db, err := sql.Open("sqlite3", "./foo.db")
-	if err != nil {
-		logger.WithError(err).Error("error opening SQLite DB")
-		return fmt.Errorf("opening SQLite: %w", err)
-	}
-	defer func() {
-		logger.Debug("database stopping")
-		_ = db.Close()
-	}()
-
-Then you can initialize the AppDatabase and pass it to the components package.
-*/
 package database
 
 import (
@@ -42,30 +12,30 @@ import (
 type AppDatabase interface {
 	//photos
 	UploadPhoto(photo components.Photo) (components.Photo, error)
-	DeletePhoto(id int) error
+	DeletePhoto(id uint64) error
 
 	//users
-	SetUsername(UserId int, new_username string) error
-	InsertUser(newUsername string) (int, error)
-	DeleteUser(UserId int) error
-	GetUser(Username string) (int, error)
-	GetUserStream(UserId int) (components.PhotoList, error)
+	SetUsername(UserId uint64, new_username string) error
+	InsertUser(newUsername string) (uint64, error)
+	DeleteUser(UserId uint64) error
+	GetUser(Username string) (uint64, error)
+	GetUserStream(UserId uint64) (components.PhotoList, error)
 
 	//comments
 	AddComment(Commnt components.Comment) error
-	DeleteComment(commentId int) error
+	DeleteComment(commentId uint64) error
 
 	//Likes
-	LikePhoto(IdPhoto int, UserLikeId int) error
-	DeleteLike(IdPhoto int, UserLikeId int) error
+	LikePhoto(IdPhoto uint64, UserLikeId uint64) error
+	DeleteLike(IdPhoto uint64, UserLikeId uint64) error
 
 	//follows
-	FollowUser(IdUserToFollow int, IdFollowingUser int) error
-	DeleteFollow(IdUserToNotFollow int, IdFollowingUser int) error
+	FollowUser(IdUserToFollow uint64, IdFollowingUser uint64) error
+	DeleteFollow(IdUserToNotFollow uint64, IdFollowingUser uint64) error
 
 	//bans
-	BanUser(IdUserToBan int, IdUser int) error
-	DeleteBan(IdUserToUnban int, IdUser int) error
+	BanUser(IdUserToBan uint64, IdUser uint64) error
+	DeleteBan(IdUserToUnban uint64, IdUser uint64) error
 }
 
 type appdbimpl struct {

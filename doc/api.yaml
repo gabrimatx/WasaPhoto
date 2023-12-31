@@ -93,7 +93,7 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
 
-  /photos/{photoId}/:
+  /photos/{photoId}:
     parameters:
       - $ref: "#/components/parameters/photoId"
 
@@ -183,7 +183,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /users/{userId}/:
+  /users/{userId}:
     parameters:
       - $ref: "#/components/parameters/userId"
 

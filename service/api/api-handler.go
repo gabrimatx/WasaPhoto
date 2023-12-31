@@ -11,9 +11,10 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/context", rt.wrap(rt.getContextReply))
 	// Login
 	rt.router.POST("/session/", rt.wrap(rt.doLogin))
-
+	//User
+	rt.router.PUT("/users/:userId", rt.wrap(rt.setMyUserName))
 	//Follows
-	rt.router.PUT("/users/{userId}/follows/{followId}", rt.wrap(rt.followUser))
+	rt.router.PUT("/users/:userId/follows/:followId", rt.wrap(rt.followUser))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)

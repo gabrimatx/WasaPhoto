@@ -4,7 +4,7 @@ import (
 	components "github.com/gabrimatx/WasaPhoto/service"
 )
 
-func (db *appdbimpl) GetUserStream(UserId int) (components.PhotoList, error) {
+func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) {
 	rows, err := db.c.Query(
 		`
 		SELECT * 
@@ -20,7 +20,7 @@ func (db *appdbimpl) GetUserStream(UserId int) (components.PhotoList, error) {
 	var ToReturn components.PhotoList
 	for rows.Next() {
 		var TempPhoto components.Photo
-		var placeholderId int
+		var placeholderId uint64
 		if err := rows.Scan(&placeholderId, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
 			return ToReturn, err
 		}

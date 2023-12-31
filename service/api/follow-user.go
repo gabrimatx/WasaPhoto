@@ -10,11 +10,8 @@ import (
 
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// Extract parameters
-	userIDStr := ps.ByName("userId")
-	followIDStr := ps.ByName("followId")
+	userID, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 
-	//Extract userId
-	userID, err := strconv.Atoi(userIDStr)
 	if err != nil {
 		w.Header().Set("content-type", "text/plain")
 		w.WriteHeader(http.StatusBadRequest)
@@ -22,8 +19,8 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	//Extract followId
-	followID, err := strconv.Atoi(followIDStr)
+	followID, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
+
 	if err != nil {
 		w.Header().Set("content-type", "text/plain")
 		w.WriteHeader(http.StatusBadRequest)
