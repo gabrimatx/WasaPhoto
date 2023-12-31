@@ -6,13 +6,13 @@ import (
 	"os"
 )
 
-func saveBase64Photo(base64String, fileName string) error {
+func SaveBase64Photo(base64String, fileName string) error {
 	decoded, err := base64.StdEncoding.DecodeString(base64String)
 	if err != nil {
 		return fmt.Errorf("error decoding base64 string: %v", err)
 	}
 
-	file, err := os.Create(fileName)
+	file, err := os.Create("service/filesystem/" + fileName)
 	if err != nil {
 		return fmt.Errorf("error creating file: %v", err)
 	}

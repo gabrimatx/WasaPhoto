@@ -10,6 +10,7 @@ type User struct {
 }
 
 type Photo struct {
+	File        string
 	ReleaseDate string
 	Caption     string
 	PublisherId int

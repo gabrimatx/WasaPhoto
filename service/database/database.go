@@ -11,7 +11,7 @@ import (
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	//photos
-	UploadPhoto(photo components.Photo) (components.Photo, error)
+	UploadPhoto(photo components.Photo) (uint64, error)
 	DeletePhoto(id uint64) error
 
 	//users

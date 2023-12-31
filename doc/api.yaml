@@ -460,7 +460,6 @@ components:
           description: Id of the Publisher of the photo.
           type: integer
           example: 123
-          readOnly: true
         likes:
           description: Likes of the photo.
           type: integer
