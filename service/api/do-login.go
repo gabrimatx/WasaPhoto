@@ -23,8 +23,13 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	userID, err := rt.db.GetUser(username)
-	if err == nil {
-		response := map[string]uint64{"userID": userID}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if userID != 0 {
+		response := map[string]uint64{"userId": userID}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 		return
@@ -37,7 +42,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	response := map[string]uint64{"userID": newUserID}
+	response := map[string]uint64{"userId": newUserID}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }

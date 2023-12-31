@@ -73,7 +73,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	err = db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Users (
-					Id INTEGER PRIMARY KEY AUTOINCREMENT,
+					UserId INTEGER PRIMARY KEY AUTOINCREMENT,
 					Name VARCHAR(100)
 		); `
 		_, err = db.Exec(sqlStmt)
