@@ -46,6 +46,7 @@ type AppDatabase interface {
 
 	//users
 	SetUsername(UserId int, new_username string) error
+	InsertUser(newUsername string) (int, error)
 	DeleteUser(UserId int) error
 	GetUser(Username string) (int, error)
 	GetUserStream(UserId int) (components.PhotoList, error)
@@ -65,9 +66,6 @@ type AppDatabase interface {
 	//bans
 	BanUser(IdUserToBan int, IdUser int) error
 	DeleteBan(IdUserToUnban int, IdUser int) error
-
-	//login
-	Login(Name string) (int, error)
 }
 
 type appdbimpl struct {
@@ -85,15 +83,14 @@ func New(db *sql.DB) (AppDatabase, error) {
 	var tableName string
 
 	tableName = "Photos"
-	err := db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Photos (
-					Id INT NOT NULL,
+					Id INTEGER PRIMARY KEY AUTOINCREMENT,
 					ReleaseDate VARCHAR(10),
 					Caption TEXT,
-					PublisherId INT,
-					Likes INT,
-					PRIMARY KEY (Id),
+					PublisherId INTEGER,
+					Likes INTEGER,
 					FOREIGN KEY (PublisherId) REFERENCES Users(Id)
 		); `
 		_, err = db.Exec(sqlStmt)
@@ -103,12 +100,11 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Users"
-	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Users (
-					Id INT NOT NULL,
-					Name VARCHAR(100),
-					PRIMARY KEY (Id)
+					Id INTEGER PRIMARY KEY AUTOINCREMENT,
+					Name VARCHAR(100)
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -117,14 +113,13 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Comments"
-	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Comments (
-					Id INT NOT NULL,
-					PhotoId INT,
-					UserId INT,
+					Id INTEGER PRIMARY KEY AUTOINCREMENT,
+					PhotoId INTEGER,
+					UserId INTEGER,
 					Text_Comment TEXT,
-					PRIMARY KEY (Id),
 					FOREIGN KEY (UserId) REFERENCES Users(Id),
 					FOREIGN KEY (PhotoId) REFERENCES Photos(Id)
 		); `
@@ -135,11 +130,11 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Likes"
-	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Likes (
-					PhotoId INT,
-					UserId INT,
+					PhotoId INTEGER,
+					UserId INTEGER,
 					PRIMARY KEY (PhotoId, UserId),
 					FOREIGN KEY (UserId) REFERENCES Users(Id),
 					FOREIGN KEY (PhotoId) REFERENCES Photos(Id)
@@ -151,11 +146,11 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Follows"
-	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Follows (
-					FollowerId INT,
-					FollowedId INT,
+					FollowerId INTEGER,
+					FollowedId INTEGER,
 					PRIMARY KEY (FollowerId, FollowedId),
 					FOREIGN KEY (FollowerId) REFERENCES Users(Id),
 					FOREIGN KEY (FollowedId) REFERENCES Users(Id)
@@ -167,11 +162,11 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	tableName = "Bans"
-	err = db.QueryRow(`SELECT Id FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
+	err = db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name = ?;`, tableName).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Bans (
-					BannerId INT,
-					BannedId INT,
+					BannerId INTEGER,
+					BannedId INTEGER,
 					PRIMARY KEY (BannerId, BannedId),
 					FOREIGN KEY (BannerId) REFERENCES Users(Id),
 					FOREIGN KEY (BannedId) REFERENCES Users(Id)
