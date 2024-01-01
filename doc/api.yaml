@@ -457,16 +457,10 @@ components:
       description: Comment of a published photo.
       type: object
       properties:
-        photoId:
-          description: Photo unique identifier where the comment belongs.
-          type: integer
-          example: 1234
-          readOnly: true
         commenterId:
           description: User identifier for the user that published the comment.
           type: integer
-          example: 1324
-          readOnly: true
+          example: 2
         text_comment:
           description: Text content of the comment.
           type: string

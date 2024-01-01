@@ -15,8 +15,8 @@ type Photo struct {
 }
 
 type Comment struct {
-	PhotoId      int
-	UserId       int
+	PhotoId      uint64
+	UserId       uint64
 	Text_Comment string
 }
 

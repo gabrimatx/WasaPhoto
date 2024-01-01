@@ -14,11 +14,11 @@ func (rt *_router) Handler() http.Handler {
 	//User
 	rt.router.PUT("/users/:userId", rt.wrap(rt.setMyUserName))
 	rt.router.DELETE("/users/:userId", rt.wrap(rt.deleteUser))
-
 	//Photos
 	rt.router.POST("/photos/", rt.wrap(rt.uploadPhoto))
 	rt.router.DELETE("/photos/:photoId", rt.wrap(rt.deletePhoto))
-
+	//Comments
+	rt.router.POST("/photos/:photoId/comments/", rt.wrap(rt.commentPhoto))
 	//Follows
 	rt.router.PUT("/users/:userId/follows/:followId", rt.wrap(rt.followUser))
 
