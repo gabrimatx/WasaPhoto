@@ -14,9 +14,10 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	var username string
-	err := json.NewDecoder(r.Body).Decode(&username)
 
+	var username string
+
+	err := json.NewDecoder(r.Body).Decode(&username)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

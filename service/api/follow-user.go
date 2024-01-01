@@ -11,7 +11,6 @@ import (
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// Extract parameters
 	userID, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
-
 	if err != nil {
 		w.Header().Set("content-type", "text/plain")
 		w.WriteHeader(http.StatusBadRequest)
@@ -20,7 +19,6 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 
 	followID, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
-
 	if err != nil {
 		w.Header().Set("content-type", "text/plain")
 		w.WriteHeader(http.StatusBadRequest)
@@ -28,7 +26,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	//Database logic
+	// Database logic
 	err = rt.db.FollowUser(followID, userID)
 	if err != nil {
 		w.Header().Set("content-type", "text/plain")
@@ -37,7 +35,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	//Write output
+	// Write output
 	w.Header().Set("content-type", "text/plain")
 	_, _ = w.Write([]byte("Followed user successfully"))
 }

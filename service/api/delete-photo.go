@@ -26,7 +26,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// delete photo from filesystem
 	err = filesystem.RemovePhoto(id)
 
-	//delete photo from database
+	// delete photo from database
 	err = rt.db.DeletePhoto(id)
 	if errors.Is(err, components.ErrObjNotExists) {
 		w.WriteHeader(http.StatusNotFound)

@@ -13,11 +13,13 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
 	photoId, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	userId, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

@@ -11,19 +11,19 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/context", rt.wrap(rt.getContextReply))
 	// Login
 	rt.router.POST("/session/", rt.wrap(rt.doLogin))
-	//User
+	// User
 	rt.router.PUT("/users/:userId", rt.wrap(rt.setMyUserName))
 	rt.router.DELETE("/users/:userId", rt.wrap(rt.deleteUser))
-	//Photos
+	// Photos
 	rt.router.POST("/photos/", rt.wrap(rt.uploadPhoto))
 	rt.router.DELETE("/photos/:photoId", rt.wrap(rt.deletePhoto))
-	//Comments
+	// Comments
 	rt.router.POST("/photos/:photoId/comments/", rt.wrap(rt.commentPhoto))
 	rt.router.DELETE("/photos/:photoId/comments/:commentId", rt.wrap(rt.uncommentPhoto))
-	//Likes
+	// Likes
 	rt.router.PUT("/photos/:photoId/likes/:userId", rt.wrap(rt.likePhoto))
 	rt.router.DELETE("/photos/:photoId/likes/:userId", rt.wrap(rt.unlikePhoto))
-	//Follows
+	// Follows
 	rt.router.PUT("/users/:userId/follows/:followId", rt.wrap(rt.followUser))
 
 	// Special routes
