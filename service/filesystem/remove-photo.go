@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func removePhoto(fileName string) error {
-	// Step 1: Remove the file
+func RemovePhoto(idPhoto uint64) error {
+	fileName := fmt.Sprintf("service/filesystem/%d.jpg", idPhoto)
 	err := os.Remove(fileName)
 	if err != nil {
 		return fmt.Errorf("error removing file: %v", err)
