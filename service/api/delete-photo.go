@@ -16,8 +16,8 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 
+	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -25,6 +25,11 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// delete photo from filesystem
 	err = filesystem.RemovePhoto(id)
+	if err != nil {
+		ctx.Logger.WithError(err).WithField("id", id).Error("Can't delete photo from filesystem")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	// delete photo from database
 	err = rt.db.DeletePhoto(id)
@@ -36,5 +41,6 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	w.WriteHeader(http.StatusOK)
 }

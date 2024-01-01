@@ -24,7 +24,6 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	var username string
 	err = json.NewDecoder(r.Body).Decode(&username)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -32,9 +31,10 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	rt.db.SetUsername(id, username)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	responseString := fmt.Sprintf("Name successfully changed to %s", username)
 	fmt.Fprintf(w, responseString)
 	w.WriteHeader(http.StatusOK)

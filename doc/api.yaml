@@ -27,7 +27,7 @@ tags:
 paths:
   /session/:
     post:
-      tags: ["login"]
+      tags: ["login","users"]
       summary: Logs in the user
       description: |-
         If the user does not exist, it will be created,
@@ -45,12 +45,23 @@ paths:
               description: Username of the user
               minLength: 3
               maxLength: 16
+        required: true
       responses:
         "201":
-          $ref: "#/components/responses/Created"
+          description: User log-in action successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identifier:
+                    type: integer
+                    example: 1
 
   /photos/:
     post:
+      security:
+        - bearerAuth: []
       operationId: uploadPhoto
       description: -|
         New photo upload, multiple photos possible.
@@ -69,12 +80,15 @@ paths:
           $ref: "#/components/responses/Created"
         "400":
           $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
 
   /photos/{photoId}:
     parameters:
       - $ref: "#/components/parameters/photoId"
-
     delete:
+      security:
+        - bearerAuth: []
       operationId: deletePhoto
       description: Delete photo operation that requires the id of the photo to be deleted.
       summary: Delete a photo that exists.
@@ -94,6 +108,8 @@ paths:
       - $ref: "#/components/parameters/userId"
 
     put:
+      security:
+        - bearerAuth: []
       operationId: likePhoto
       description: Put a like with the identifier of the user that put the like.
       summary: Add a like to the photo.
@@ -102,10 +118,14 @@ paths:
       responses:
         "201":
           $ref: "#/components/responses/Created"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
 
     delete:
+      security:
+        - bearerAuth: []
       operationId: unlikePhoto
       description: Remove like from the photo liked by the user.
       summary: Remove like from the photo.
@@ -123,6 +143,8 @@ paths:
     parameters:
       - $ref: "#/components/parameters/photoId"
     post:
+      security:
+        - bearerAuth: []
       operationId: commentPhoto
       description: Post a comment to the photo browsed.
       summary: Add a comment to the photo.
@@ -138,6 +160,8 @@ paths:
       responses:
         "201":
           $ref: "#/components/responses/Created"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -147,6 +171,8 @@ paths:
       - $ref: "#/components/parameters/commentId"
 
     delete:
+      security:
+        - bearerAuth: []
       operationId: uncommentPhoto
       description: Delete a comment from the photo browsed via its unique identifier.
       summary: Remove comment from the photo.
@@ -165,6 +191,8 @@ paths:
       - $ref: "#/components/parameters/userId"
 
     put:
+      security:
+        - bearerAuth: []
       description: Set a new username for the user if the necessary authorization is present.
       summary: Set username for a user.
       operationId: setMyUserName
@@ -190,6 +218,8 @@ paths:
           $ref: "#/components/responses/NotFound"
 
     delete:
+      security:
+        - bearerAuth: []
       operationId: deleteUser
       description: Delete user if the necessary authorization is present.
       summary: Delete a user profile.
@@ -227,6 +257,8 @@ paths:
       - $ref: "#/components/parameters/followId"
 
     put:
+      security:
+        - bearerAuth: []
       description: Put a follow with the id of the user followed in the follows of the user.
       summary: Follow a user.
       operationId: followUser
@@ -241,6 +273,8 @@ paths:
           $ref: "#/components/responses/NotFound"
 
     delete:
+      security:
+        - bearerAuth: []
       description: Delete the follow from the follows of the user selected.
       summary: Unfollow a user.
       operationId: unfollowUser
@@ -260,6 +294,8 @@ paths:
       - $ref: "#/components/parameters/banId"
 
     put:
+      security:
+        - bearerAuth: []
       description: Put a ban with the id of the user banned in the list of the bans.
       summary: Ban a user.
       operationId: banUser
@@ -274,6 +310,8 @@ paths:
           $ref: "#/components/responses/NotFound"
 
     delete:
+      security:
+        - bearerAuth: []
       description: Delete the ban via user id from the ban list of the user.
       summary: Unban a user.
       operationId: unbanUser
@@ -308,7 +346,7 @@ components:
           schema:
             $ref: "#/components/schemas/ResponseMessage"
     Unauthorized:
-      description: Unauthorized
+      description: Access token missing
       content:
         application/json:
           schema:
@@ -357,11 +395,10 @@ components:
         description: Id of the comment on the photo.
         type: integer
   securitySchemes:
-    bearerAuth: # arbitrary name for the security scheme
+    bearerAuth:          
       type: http
       scheme: bearer
-      bearerFormat: string # optional, arbitrary value for documentation purposes
-
+      bearerFormat: integer    
   schemas:
     ResponseMessage:
       type: object

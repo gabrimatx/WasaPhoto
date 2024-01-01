@@ -21,7 +21,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
-	} //Should add a check if the photo exists or not
+	}
 
 	var commentBody struct {
 		UserID uint64 `json:"commenterId"`

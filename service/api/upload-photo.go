@@ -24,7 +24,7 @@ const uploadDirectory = "service/filesystem/"
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// Parse the form data
-	err := r.ParseMultipartForm(10 << 20) //memory limit
+	err := r.ParseMultipartForm(10 << 20) // memory limit
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error parsing multipart form: %s", err.Error()), http.StatusBadRequest)
 		return

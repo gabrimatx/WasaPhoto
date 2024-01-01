@@ -16,7 +16,6 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	var username string
-
 	err := json.NewDecoder(r.Body).Decode(&username)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -25,7 +24,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	userID, err := rt.db.GetUser(username)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

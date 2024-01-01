@@ -1,10 +1,5 @@
 package components
 
-type Error struct {
-	code    string
-	message string
-}
-
 type User struct {
 	Name string
 }

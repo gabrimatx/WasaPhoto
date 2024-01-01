@@ -15,8 +15,8 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	id, err := strconv.ParseUint(ps.ByName("commentId"), 10, 64)
 
+	id, err := strconv.ParseUint(ps.ByName("commentId"), 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
