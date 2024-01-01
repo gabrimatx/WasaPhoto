@@ -45,9 +45,6 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		fmt.Fprint(w, "Access granted!")
 	} else {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
-	}
-	if r.Method != http.MethodPut {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 

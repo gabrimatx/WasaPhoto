@@ -45,6 +45,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		fmt.Fprint(w, "Access granted!")
 	} else {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
+		return
 	}
 
 	err = rt.db.LikePhoto(photoId, userId)

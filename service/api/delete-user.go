@@ -2,8 +2,10 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	components "github.com/gabrimatx/WasaPhoto/service"
 	"github.com/gabrimatx/WasaPhoto/service/api/reqcontext"
@@ -16,9 +18,30 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	authParts := strings.Fields(authHeader)
+	if len(authParts) != 2 || authParts[0] != "Bearer" {
+		http.Error(w, "Invalid token format", http.StatusUnauthorized)
+		return
+	}
+
+	token := authParts[1]
+
 	id, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if token == fmt.Sprint(id) {
+		fmt.Fprint(w, "Access granted!")
+	} else {
+		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
 
