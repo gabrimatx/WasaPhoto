@@ -64,6 +64,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	response := map[string]uint64{"photoID": photoID}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+	w.WriteHeader(http.StatusCreated)
 }
 
 // saveUploadedFile saves the uploaded file to the filesystem

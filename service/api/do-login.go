@@ -32,6 +32,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		response := map[string]uint64{"userId": userID}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(http.StatusOK)
 		return
 	}
 
@@ -45,4 +46,5 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	response := map[string]uint64{"userId": newUserID}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+	w.WriteHeader(http.StatusCreated)
 }

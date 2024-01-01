@@ -37,4 +37,5 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 	responseString := fmt.Sprintf("Name successfully changed to %s", username)
 	fmt.Fprintf(w, responseString)
+	w.WriteHeader(http.StatusOK)
 }
