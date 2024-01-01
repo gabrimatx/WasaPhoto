@@ -6,7 +6,7 @@ info:
   contact:
     email: matiddi.1985899@studenti.uniroma1.it
 servers:
-  - url: https://localhost:3000
+  - url: http://localhost:3000
 
 tags:
   - name: photos
@@ -84,8 +84,8 @@ paths:
         required: true
         description: Request body for the photo
         content:
-          application/json:
-            schema:
+          multipart/form-data: 
+            schema:            
               $ref: "#/components/schemas/Photo"
       responses:
         "201":
@@ -408,14 +408,7 @@ components:
       title: User
       description: User profile of a user.
       type: object
-      required:
-        - id
       properties:
-        id:
-          description: User identifier, uniquely generated.
-          type: integer
-          example: 32132131
-          readOnly: true
         name:
           description: Name of the user.
           type: string
@@ -428,42 +421,28 @@ components:
       description: This object represents a photo in the system.
       type: object
       properties:
-        id:
-          description: Photo identifier, uniquely generated.
-          type: integer
-          example: 123456
-          readOnly: true
         file:
           type: string
-          format: base64
+          format: binary
           description: The photo file
-          example: anfdsngknfdsgfdbgfdbhgjfdgbdfgbdfj
+          example: 1010
           minLength: 0
-          maxLength: 1000000
+          maxLength: 100000000
           pattern: ".*"
-        ReleaseDate:
-          type: string
-          description: Date and time of photo publication.
-          format: date-time
-          example: "2016-08-29T09:12:33.001Z"
-          pattern: ".*"
-          minLength: 0
-          maxLength: 30
-        Caption:
-          description: Photo Caption written by the user.
-          type: string
-          example: Bella giornata!
-          pattern: ".*"
-          minLength: 0
-          maxLength: 100
-        PublisherId:
-          description: Id of the Publisher of the photo.
-          type: integer
-          example: 123
-        likes:
-          description: Likes of the photo.
-          type: integer
-          example: 123
+        additionalData:
+          type: object
+          properties:
+            Caption:
+              description: Photo Caption written by the user.
+              type: string
+              example: Bella giornata!
+              pattern: ".*"
+              minLength: 0
+              maxLength: 100
+            PublisherId:
+              description: Id of the Publisher of the photo.
+              type: integer
+              example: 123
     PhotoList:
       title: PhotoList
       description: list of Photos
@@ -478,11 +457,6 @@ components:
       description: Comment of a published photo.
       type: object
       properties:
-        id:
-          description: Comment unique identifier.
-          type: integer
-          example: 1234
-          readOnly: true
         photoId:
           description: Photo unique identifier where the comment belongs.
           type: integer
