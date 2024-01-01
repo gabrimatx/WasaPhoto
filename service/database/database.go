@@ -10,32 +10,36 @@ import (
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
-	//photos
+	// photos
 	UploadPhoto(photo components.Photo) (uint64, error)
 	DeletePhoto(id uint64) error
 
-	//users
+	// users
 	SetUsername(UserId uint64, new_username string) error
 	InsertUser(newUsername string) (uint64, error)
 	DeleteUser(UserId uint64) error
 	GetUser(Username string) (uint64, error)
 	GetUserStream(UserId uint64) (components.PhotoList, error)
 
-	//comments
+	// comments
 	AddComment(Commnt components.Comment) error
 	DeleteComment(commentId uint64) error
 
-	//Likes
+	// Likes
 	LikePhoto(IdPhoto uint64, UserLikeId uint64) error
 	DeleteLike(IdPhoto uint64, UserLikeId uint64) error
 
-	//follows
+	// follows
 	FollowUser(IdUserToFollow uint64, IdFollowingUser uint64) error
 	DeleteFollow(IdUserToNotFollow uint64, IdFollowingUser uint64) error
 
-	//bans
+	// bans
 	BanUser(IdUserToBan uint64, IdUser uint64) error
 	DeleteBan(IdUserToUnban uint64, IdUser uint64) error
+
+	// Utils
+	GetUserIdFromCommentId(commentId uint64) (uint64, error)
+	GetUserIdFromPhotoId(photoId uint64) (uint64, error)
 }
 
 type appdbimpl struct {

@@ -60,8 +60,6 @@ paths:
 
   /photos/:
     post:
-      security:
-        - bearerAuth: []
       operationId: uploadPhoto
       description: -|
         New photo upload, multiple photos possible.
@@ -143,14 +141,11 @@ paths:
     parameters:
       - $ref: "#/components/parameters/photoId"
     post:
-      security:
-        - bearerAuth: []
       operationId: commentPhoto
       description: Post a comment to the photo browsed.
       summary: Add a comment to the photo.
       tags:
         - comments
-
       requestBody:
         required: true
         content:
@@ -189,7 +184,7 @@ paths:
   /users/{userId}:
     parameters:
       - $ref: "#/components/parameters/userId"
-
+      
     put:
       security:
         - bearerAuth: []
