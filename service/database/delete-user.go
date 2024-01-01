@@ -15,7 +15,7 @@ func (db *appdbimpl) DeleteUser(UserId uint64) error {
 		return err
 	} else if affected == 0 {
 		// If we didn't delete any row, then the user didn't exist
-		return components.ErrUserNotExists
+		return components.ErrObjNotExists
 	}
 	return nil
 }

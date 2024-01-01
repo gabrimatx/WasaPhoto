@@ -2,4 +2,4 @@ package components
 
 import "errors"
 
-var ErrUserNotExists = errors.New("User does not exists")
+var ErrObjNotExists = errors.New("Object does not exists")

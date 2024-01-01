@@ -23,7 +23,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 
 	err = rt.db.DeleteUser(id)
-	if errors.Is(err, components.ErrUserNotExists) {
+	if errors.Is(err, components.ErrObjNotExists) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	} else if err != nil {
