@@ -84,6 +84,21 @@ paths:
   /photos/{photoId}:
     parameters:
       - $ref: "#/components/parameters/photoId"
+    get:
+      operationId: getPhoto
+      description: Get photo file for frontend
+      summary: photo file
+      tags:
+        - photos
+      responses:
+        "200":
+          $ref: "#/components/responses/OK"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        
+
     delete:
       security:
         - bearerAuth: []
