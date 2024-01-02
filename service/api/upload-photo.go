@@ -70,8 +70,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 // saveUploadedFile saves the uploaded file to the filesystem
 func saveUploadedFile(file multipart.File, handler *multipart.FileHeader, photoID uint64) error {
 	// filename such that id.ext
-	fileExtension := filepath.Ext(handler.Filename)
-	fileName := filepath.Join(uploadDirectory, fmt.Sprintf("%d%s", photoID, fileExtension))
+	fileName := filepath.Join(uploadDirectory, fmt.Sprintf("%d%s", photoID, ".jpg"))
 
 	// create file
 	out, err := os.Create(fileName)
