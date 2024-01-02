@@ -54,6 +54,6 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	rt.db.IncrementLikeCount(photoId)
 	w.WriteHeader(http.StatusOK)
 }

@@ -54,6 +54,6 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	rt.db.DecrementLikeCount(photoId)
 	w.WriteHeader(http.StatusOK)
 }

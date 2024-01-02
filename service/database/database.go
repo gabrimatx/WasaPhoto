@@ -28,6 +28,8 @@ type AppDatabase interface {
 	// Likes
 	LikePhoto(IdPhoto uint64, UserLikeId uint64) error
 	DeleteLike(IdPhoto uint64, UserLikeId uint64) error
+	IncrementLikeCount(photoId uint64) error
+	DecrementLikeCount(photoId uint64) error
 
 	// follows
 	FollowUser(IdUserToFollow uint64, IdFollowingUser uint64) error
