@@ -6,7 +6,7 @@ type User struct {
 
 type Photo struct {
 	Caption     string
-	PublisherId int
+	PublisherId uint64
 }
 
 type Comment struct {
@@ -15,6 +15,14 @@ type Comment struct {
 	Text_Comment string
 }
 
+type PhotoListElement struct {
+	Id          uint64 `json:"id"`
+	ReleaseDate string `json:"date"`
+	Caption     string `json:"caption"`
+	PublisherId uint64 `json:"userId"`
+	Likes       int    `json:"likecount"`
+}
+
 type PhotoList struct {
-	PList []Photo
+	PList []PhotoListElement
 }

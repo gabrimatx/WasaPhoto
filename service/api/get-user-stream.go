@@ -7,12 +7,13 @@ import (
 	"strconv"
 	"strings"
 
+	components "github.com/gabrimatx/WasaPhoto/service"
 	"github.com/gabrimatx/WasaPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	if r.Method != http.MethodPut {
+func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -36,7 +37,6 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	token := authParts[1]
-
 	if token == fmt.Sprint(id) {
 		fmt.Fprint(w, "Access granted!")
 	} else {
@@ -44,20 +44,21 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	var username string
-	err = json.NewDecoder(r.Body).Decode(&username)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	rt.db.SetUsername(id, username)
+	var photoStream components.PhotoList
+	photoStream, err = rt.db.GetUserStream(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	responseString := fmt.Sprintf("Name successfully changed to %s", username)
-	fmt.Fprintf(w, responseString)
+	photoStreamJSON, err := json.Marshal(photoStream)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	w.Write(photoStreamJSON)
 	w.WriteHeader(http.StatusOK)
 }

@@ -184,7 +184,7 @@ paths:
   /users/{userId}:
     parameters:
       - $ref: "#/components/parameters/userId"
-      
+
     put:
       security:
         - bearerAuth: []
@@ -228,7 +228,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /users/{userId}/stream:
+  /users/{userId}/stream/:
     parameters:
       - $ref: "#/components/parameters/userId"
 

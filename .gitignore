@@ -5,6 +5,7 @@
 *.iml
 *.exe
 *.jpg
+*.png
 .DS_Store
 .env
 *.wiki.git
