@@ -10,8 +10,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	if r.Method != http.MethodPut {
+func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	if r.Method != http.MethodDelete {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -48,9 +48,9 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	err = rt.db.FollowUser(followId, userId)
+	err = rt.db.DeleteFollow(followId, userId)
 	if err != nil {
-		ctx.Logger.WithError(err).WithField("id", followId).Error("Can't follow user")
+		ctx.Logger.WithError(err).WithField("id", followId).Error("Can't unfollow user")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
