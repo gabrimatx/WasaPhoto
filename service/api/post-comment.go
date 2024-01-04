@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	components "github.com/gabrimatx/WasaPhoto/service"
 	"github.com/gabrimatx/WasaPhoto/service/api/reqcontext"
@@ -17,6 +18,16 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
+	authHeader := r.Header.Get("Authorization")
+	authParts := strings.Fields(authHeader)
+	token := authParts[1]
+	PublisherId, err := strconv.ParseUint(token, 10, 64)
+	if err != nil {
+		ctx.Logger.Error("Bad header parsing")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		ctx.Logger.Error("Bad id")
@@ -25,8 +36,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	var commentBody struct {
-		UserID uint64 `json:"commenterId"`
-		Text   string `json:"text_comment"`
+		Text string `json:"text_comment"`
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&commentBody)
@@ -38,7 +48,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	comment := components.Comment{
 		PhotoId:      id,
-		UserId:       commentBody.UserID,
+		UserId:       PublisherId,
 		Text_Comment: commentBody.Text,
 	}
 
