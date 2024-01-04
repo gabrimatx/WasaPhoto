@@ -25,6 +25,14 @@ type CommentList struct {
 	CList []CommentListElement
 }
 
+type Response struct {
+	PhotoList
+	FollowCount   int  `json:"followCount"`
+	FollowedCount int  `json:"followedCount"`
+	IsFollowed    bool `json:"isFollowed"`
+	IsBanned      bool `json:"isBanned"`
+}
+
 type PhotoListElement struct {
 	Id          uint64 `json:"id"`
 	ReleaseDate string `json:"date"`

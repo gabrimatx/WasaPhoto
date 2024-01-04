@@ -12,7 +12,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/users/:userId", rt.wrap(rt.setMyUserName))
 	rt.router.DELETE("/users/:userId", rt.wrap(rt.deleteUser))
 	rt.router.GET("/users/:userId/stream/", rt.wrap(rt.getMyStream)) // To fix
-	// To add getUserProfile IMPORTANT
+	rt.router.GET("/users/:userId", rt.wrap(rt.getUserProfile))      // To fix
 
 	// Photos
 	rt.router.POST("/photos/", rt.wrap(rt.uploadPhoto))
