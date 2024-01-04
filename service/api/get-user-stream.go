@@ -18,9 +18,15 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	if !CheckValidAuth(r) {
-		ctx.Logger.Error("Auth header invalid")
-		w.WriteHeader(http.StatusUnauthorized)
+	ans := CheckIdAuthorized(r, id)
+	if ans != 0 {
+		if ans == 2 {
+			ctx.Logger.WithField("id", id).Error("Can't authorize user")
+			w.WriteHeader(http.StatusForbidden)
+		} else {
+			ctx.Logger.WithField("id", id).Error("Auth header invalid")
+			w.WriteHeader(http.StatusUnauthorized)
+		}
 		return
 	}
 

@@ -24,6 +24,28 @@ func (rt *_router) getComments(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	myId := GetIdFromBearer(r)
+
+	hisId, err := rt.db.GetUserIdFromPhotoId(id)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error during id getting")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	isBan, err := rt.db.GetBoolBanned(myId, hisId)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error during ban getting")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if isBan {
+		ctx.Logger.Error("Banned")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	var commentList components.CommentList
 	commentList, err = rt.db.GetPhotoComments(id)
 	if err != nil {

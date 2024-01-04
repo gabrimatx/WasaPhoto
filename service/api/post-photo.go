@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
-	"strings"
 
 	components "github.com/gabrimatx/WasaPhoto/service"
 	"github.com/gabrimatx/WasaPhoto/service/api/reqcontext"
@@ -31,10 +29,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-
-	authHeader := r.Header.Get("Authorization")
-	authParts := strings.Fields(authHeader)
-	token := authParts[1]
 
 	// Parse the form data
 	err := r.ParseMultipartForm(10 << 20) // memory limit
@@ -63,12 +57,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	PublisherId, err := strconv.ParseUint(token, 10, 64)
-	if err != nil {
-		ctx.Logger.Error("Bad header parsing")
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
+	PublisherId := GetIdFromBearer(r)
 
 	// add photo info to database
 	photoID, err := rt.db.UploadPhoto(photoData, PublisherId)

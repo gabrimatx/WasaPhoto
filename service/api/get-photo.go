@@ -19,7 +19,33 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 	//check if not banned from photo
+	if !CheckValidAuth(r) {
+		ctx.Logger.Error("Auth header invalid")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
+	myId := GetIdFromBearer(r)
+
+	hisId, err := rt.db.GetUserIdFromPhotoId(id)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error during id getting")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	isBan, err := rt.db.GetBoolBanned(myId, hisId)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error during ban getting")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if isBan {
+		ctx.Logger.Error("Banned")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	// get photo from filesystem
 	path := "service/filesystem/" + strconv.FormatUint(id, 10) + ".jpg"
 	photofile, err := os.Open(path)

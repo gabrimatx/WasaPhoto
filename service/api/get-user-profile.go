@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
 
 	components "github.com/gabrimatx/WasaPhoto/service"
 	"github.com/gabrimatx/WasaPhoto/service/api/reqcontext"
@@ -19,12 +18,6 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	if !CheckValidAuth(r) {
-		ctx.Logger.Error("Auth header invalid")
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
 	var photoStream components.PhotoList
 	photoStream, err = rt.db.GetProfilePhotos(id)
 	if err != nil {
@@ -33,12 +26,30 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	authHeader := r.Header.Get("Authorization")
-	authParts := strings.Fields(authHeader)
-	token := authParts[1]
-	myId, err := strconv.ParseUint(token, 10, 64)
+	if !CheckValidAuth(r) {
+		ctx.Logger.Error("Auth header invalid")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	myId := GetIdFromBearer(r)
+
+	hisId, err := rt.db.GetUserIdFromPhotoId(id)
 	if err != nil {
-		ctx.Logger.WithError(err).Error("Error during id  auth getting")
+		ctx.Logger.WithError(err).Error("Error during id getting")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	isBan, err := rt.db.GetBoolBanned(myId, hisId)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error during ban getting")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if isBan {
+		ctx.Logger.Error("Banned")
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
