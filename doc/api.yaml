@@ -265,7 +265,7 @@ paths:
       tags:
         - users
       description: Obtain photos published by the user selected via the parameter in the link and also other data.
-      summary: Get the photos of the user.
+      summary: Get the photos of the user and other data.
       responses:
         "200":
           description: user profile returned successfully
@@ -274,7 +274,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  photos:
+                  PList:
                     type: array
                     description: The ids of the photos in the array
                     items: { $ref: "#/components/schemas/PhotoListElement" }

@@ -20,6 +20,7 @@ type AppDatabase interface {
 	DeleteUser(UserId uint64) error
 	GetUser(Username string) (uint64, error)
 	GetUserStream(UserId uint64) (components.PhotoList, error)
+	GetProfilePhotos(UserId uint64) (components.PhotoList, error)
 
 	// comments
 	AddComment(Commnt components.Comment) error
@@ -35,10 +36,14 @@ type AppDatabase interface {
 	// follows
 	FollowUser(IdUserToFollow uint64, IdFollowingUser uint64) error
 	DeleteFollow(IdUserToNotFollow uint64, IdFollowingUser uint64) error
+	GetFollowedUsers(userId uint64) (int, error)
+	GetFollowingUsers(userId uint64) (int, error)
+	GetBoolFollow(userId uint64, myId uint64) (bool, error)
 
 	// bans
 	BanUser(IdUserToBan uint64, IdUser uint64) error
 	DeleteBan(IdUserToUnban uint64, IdUser uint64) error
+	GetBoolBanned(userId uint64, myId uint64) (bool, error)
 
 	// Utils
 	GetUserIdFromCommentId(commentId uint64) (uint64, error)
