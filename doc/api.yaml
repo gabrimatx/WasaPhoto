@@ -264,7 +264,7 @@ paths:
       operationId: getUserProfile
       tags:
         - users
-      description: Obtain photos published by the user selected via the parameter in the link.
+      description: Obtain photos published by the user selected via the parameter in the link and also other data.
       summary: Get the photos of the user.
       responses:
         "200":

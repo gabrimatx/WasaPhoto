@@ -24,6 +24,7 @@ type AppDatabase interface {
 	// comments
 	AddComment(Commnt components.Comment) error
 	DeleteComment(commentId uint64) error
+	GetPhotoComments(photoId uint64) (components.CommentList, error)
 
 	// Likes
 	LikePhoto(IdPhoto uint64, UserLikeId uint64) error

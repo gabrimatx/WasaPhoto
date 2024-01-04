@@ -15,8 +15,14 @@ type Comment struct {
 }
 
 type CommentListElement struct {
-	PublisherId uint64
-	commentText string
+	Id          uint64 `json:"id"`
+	PhotoId     uint64 `json:"photoId"`
+	PublisherId uint64 `json:"publisherId"`
+	CommentText string `json:"text"`
+}
+
+type CommentList struct {
+	CList []CommentListElement
 }
 
 type PhotoListElement struct {

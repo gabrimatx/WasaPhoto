@@ -36,7 +36,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	var commentBody struct {
-		Text string `json:"text_comment"`
+		Text string `json:"commentText"`
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&commentBody)

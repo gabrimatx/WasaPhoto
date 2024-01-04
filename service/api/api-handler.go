@@ -6,10 +6,9 @@ import (
 
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
-	// Login
-	rt.router.POST("/session/", rt.wrap(rt.doLogin))
 
 	// User
+	rt.router.POST("/session/", rt.wrap(rt.doLogin))
 	rt.router.PUT("/users/:userId", rt.wrap(rt.setMyUserName))
 	rt.router.DELETE("/users/:userId", rt.wrap(rt.deleteUser))
 	rt.router.GET("/users/:userId/stream/", rt.wrap(rt.getMyStream)) // To fix
@@ -23,7 +22,7 @@ func (rt *_router) Handler() http.Handler {
 	// Comments
 	rt.router.POST("/photos/:photoId/comments/", rt.wrap(rt.commentPhoto))
 	rt.router.DELETE("/photos/:photoId/comments/:commentId", rt.wrap(rt.uncommentPhoto))
-	// get comments
+	rt.router.GET("/photos/:photoId/comments/", rt.wrap(rt.getComments))
 
 	// Likes
 	rt.router.PUT("/photos/:photoId/likes/:userId", rt.wrap(rt.likePhoto))
