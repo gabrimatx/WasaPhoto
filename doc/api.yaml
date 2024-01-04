@@ -28,7 +28,7 @@ paths:
   /session/:
     post:
       security: []
-      tags: ["login","users"]
+      tags: ["login", "users"]
       summary: Logs in the user
       description: |-
         If the user does not exist, it will be created,
@@ -73,8 +73,8 @@ paths:
         required: true
         description: Request body for the photo
         content:
-          multipart/form-data: 
-            schema:            
+          multipart/form-data:
+            schema:
               $ref: "#/components/schemas/Photo"
       responses:
         "201":
@@ -165,7 +165,7 @@ paths:
   /photos/{photoId}/comments/:
     parameters:
       - $ref: "#/components/parameters/photoId"
-    
+
     get:
       operationId: getComments
       description: Get all the comments of the photo
@@ -187,7 +187,7 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
-      
+
     post:
       operationId: commentPhoto
       description: Post a comment to the photo browsed.
@@ -259,7 +259,7 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-    
+
     get:
       operationId: getUserProfile
       tags:
@@ -286,7 +286,7 @@ paths:
                     description: number of users that follow the user
                   followedCount:
                     type: integer
-                    example: 0 
+                    example: 0
                     description: number of users that the user follows
                   isBanned:
                     type: boolean
@@ -302,7 +302,6 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-
 
     delete:
       operationId: deleteUser
@@ -498,10 +497,10 @@ components:
         description: Id of the comment on the photo.
         type: integer
   securitySchemes:
-    bearerAuth:          
+    bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: integer    
+      bearerFormat: integer
   schemas:
     ResponseMessage:
       type: object
@@ -547,7 +546,7 @@ components:
               maxLength: 100
     PhotoListElement:
       title: PhotoListElement
-      description: This object is a component of the photo list returned 
+      description: This object is a component of the photo list returned
       type: object
       properties:
         id:
@@ -572,10 +571,10 @@ components:
         releaseDate:
           type: string
           format: date-time
-          example: '2017-07-21T17:32:28Z'
+          example: "2017-07-21T17:32:28Z"
           minLength: 20
           maxLength: 20
-          description: date of the photo release 
+          description: date of the photo release
     Comment:
       title: Comment
       description: Comment of a published photo.
@@ -597,14 +596,13 @@ components:
           description: id of the user that published the comment
           type: integer
           example: 1
-        commentText:          
+        commentText:
           description: Text content of the comment.
           type: string
           example: Nice photo!
           minLength: 0
           maxLength: 1000
           pattern: ".*"
-        
 
 security:
   - bearerAuth: []
