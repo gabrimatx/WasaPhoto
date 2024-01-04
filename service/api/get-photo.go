@@ -15,7 +15,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		ctx.Logger.Error("Bad id")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 	//check if not banned from photo

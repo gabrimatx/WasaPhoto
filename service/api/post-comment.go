@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -12,14 +11,16 @@ import (
 )
 
 func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	if !CheckValidAuth(r) {
+		ctx.Logger.Error("Auth header invalid")
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
 	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		ctx.Logger.Error("Bad id")
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
@@ -29,9 +30,9 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&commentBody)
-	fmt.Fprint(w, commentBody.Text)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Bad json content")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -47,6 +48,4 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }

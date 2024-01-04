@@ -12,8 +12,8 @@ import (
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	id, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
-		ctx.Logger.WithError(err).WithField("id", id).Error("Can't change username")
-		w.WriteHeader(http.StatusBadRequest)
+		ctx.Logger.WithError(err).WithField("id", id).Error("User not found")
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 

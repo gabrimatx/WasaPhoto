@@ -14,7 +14,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 	id, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
 		ctx.Logger.Error("Bad id")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
