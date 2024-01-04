@@ -1,13 +1,11 @@
 package database
 
 import (
-	"fmt"
-	"log"
-
 	components "github.com/gabrimatx/WasaPhoto/service"
 )
 
 func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) {
+	var ToReturn components.PhotoList
 	rows, err := db.c.Query(
 		`
 		SELECT * 
@@ -19,15 +17,12 @@ func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) 
 		)
 		ORDER BY ReleaseDate
 		`, UserId)
-	defer rows.Close()
-	var ToReturn components.PhotoList
 	if err != nil {
-		log.Fatal(err)
 		return ToReturn, err
 	}
+	defer rows.Close()
 
 	if !rows.Next() {
-		fmt.Println("No photos found for the given criteria.")
 		return ToReturn, err
 	}
 
@@ -38,5 +33,10 @@ func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) 
 		}
 		ToReturn.PList = append(ToReturn.PList, TempPhoto)
 	}
+
+	if err := rows.Err(); err != nil {
+		return ToReturn, err
+	}
+
 	return ToReturn, err
 }
