@@ -5,8 +5,7 @@ type User struct {
 }
 
 type Photo struct {
-	Caption     string
-	PublisherId uint64
+	Caption string
 }
 
 type Comment struct {

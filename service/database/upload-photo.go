@@ -7,11 +7,11 @@ import (
 )
 
 // GetName is an example that shows you how to query data
-func (db *appdbimpl) UploadPhoto(photo components.Photo) (uint64, error) {
+func (db *appdbimpl) UploadPhoto(photo components.Photo, PublisherId uint64) (uint64, error) {
 	currentTime := time.Now()
 	res, err := db.c.Exec(
 		"INSERT INTO Photos(ReleaseDate, Caption, PublisherId, Likes) VALUES (?, ?, ?, 0)",
-		currentTime.Format("01-02-2006"), photo.Caption, photo.PublisherId)
+		currentTime.Format("01-02-2006"), photo.Caption, PublisherId)
 
 	if err != nil {
 		return 0, err

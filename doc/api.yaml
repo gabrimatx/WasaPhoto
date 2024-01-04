@@ -477,10 +477,6 @@ components:
               pattern: ".*"
               minLength: 0
               maxLength: 100
-            PublisherId:
-              description: Id of the Publisher of the photo.
-              type: integer
-              example: 123
     Comment:
       title: Comment
       description: Comment of a published photo.
