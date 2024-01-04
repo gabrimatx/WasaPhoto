@@ -27,6 +27,7 @@ tags:
 paths:
   /session/:
     post:
+      security: []
       tags: ["login","users"]
       summary: Logs in the user
       description: |-
@@ -53,8 +54,10 @@ paths:
             application/json:
               schema:
                 type: object
+                description: Object containing user identifier.
                 properties:
                   identifier:
+                    description: User unique identifier.
                     type: integer
                     example: 1
 
@@ -95,13 +98,11 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-        
-
     delete:
-      security:
-        - bearerAuth: []
       operationId: deletePhoto
       description: Delete photo operation that requires the id of the photo to be deleted.
       summary: Delete a photo that exists.
@@ -112,6 +113,8 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -121,8 +124,6 @@ paths:
       - $ref: "#/components/parameters/userId"
 
     put:
-      security:
-        - bearerAuth: []
       operationId: likePhoto
       description: Put a like with the identifier of the user that put the like.
       summary: Add a like to the photo.
@@ -137,8 +138,6 @@ paths:
           $ref: "#/components/responses/NotFound"
 
     delete:
-      security:
-        - bearerAuth: []
       operationId: unlikePhoto
       description: Remove like from the photo liked by the user.
       summary: Remove like from the photo.
@@ -149,6 +148,8 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -181,8 +182,6 @@ paths:
       - $ref: "#/components/parameters/commentId"
 
     delete:
-      security:
-        - bearerAuth: []
       operationId: uncommentPhoto
       description: Delete a comment from the photo browsed via its unique identifier.
       summary: Remove comment from the photo.
@@ -193,6 +192,8 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -201,8 +202,6 @@ paths:
       - $ref: "#/components/parameters/userId"
 
     put:
-      security:
-        - bearerAuth: []
       description: Set a new username for the user if the necessary authorization is present.
       summary: Set username for a user.
       operationId: setMyUserName
@@ -224,12 +223,29 @@ paths:
           $ref: "#/components/responses/Created"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    
+    get:
+      operationId: getUserProfile
+      tags:
+        - users
+      description: Obtain photos published by the user selected via the parameter in the link.
+      summary: Get the photos of the user.
+      responses:
+        "200":
+          $ref: "#/components/responses/OK"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
+
     delete:
-      security:
-        - bearerAuth: []
       operationId: deleteUser
       description: Delete user if the necessary authorization is present.
       summary: Delete a user profile.
@@ -240,6 +256,8 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -258,6 +276,8 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -267,8 +287,6 @@ paths:
       - $ref: "#/components/parameters/followId"
 
     put:
-      security:
-        - bearerAuth: []
       description: Put a follow with the id of the user followed in the follows of the user.
       summary: Follow a user.
       operationId: followUser
@@ -279,12 +297,12 @@ paths:
           $ref: "#/components/responses/Created"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
     delete:
-      security:
-        - bearerAuth: []
       description: Delete the follow from the follows of the user selected.
       summary: Unfollow a user.
       operationId: unfollowUser
@@ -295,6 +313,8 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -304,8 +324,6 @@ paths:
       - $ref: "#/components/parameters/banId"
 
     put:
-      security:
-        - bearerAuth: []
       description: Put a ban with the id of the user banned in the list of the bans.
       summary: Ban a user.
       operationId: banUser
@@ -316,12 +334,12 @@ paths:
           $ref: "#/components/responses/Created"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
     delete:
-      security:
-        - bearerAuth: []
       description: Delete the ban via user id from the ban list of the user.
       summary: Unban a user.
       operationId: unbanUser
@@ -332,6 +350,8 @@ paths:
           $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -357,6 +377,12 @@ components:
             $ref: "#/components/schemas/ResponseMessage"
     Unauthorized:
       description: Access token missing
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseMessage"
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -428,18 +454,6 @@ components:
           maxLength: 1000
           example: "Error element not found"
           pattern: ".*"
-    User:
-      title: User
-      description: User profile of a user.
-      type: object
-      properties:
-        name:
-          description: Name of the user.
-          type: string
-          example: Gabriele Matiddi
-          minLength: 0
-          maxLength: 100
-          pattern: ".*"
     Photo:
       title: Photo
       description: This object represents a photo in the system.
@@ -467,15 +481,6 @@ components:
               description: Id of the Publisher of the photo.
               type: integer
               example: 123
-    PhotoList:
-      title: PhotoList
-      description: list of Photos
-      type: array
-      items:
-        $ref: "#/components/schemas/Photo"
-      minItems: 0
-      maxItems: 1000
-      #Missing example
     Comment:
       title: Comment
       description: Comment of a published photo.
