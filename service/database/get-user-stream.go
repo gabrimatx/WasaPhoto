@@ -16,6 +16,7 @@ func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) 
 			WHERE FollowerId = ?
 		)
 		ORDER BY ReleaseDate
+		LIMIT 20
 		`, UserId)
 	if err != nil {
 		return ToReturn, err
@@ -24,6 +25,12 @@ func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) 
 
 	if !rows.Next() {
 		return ToReturn, err
+	} else {
+		var TempPhoto components.PhotoListElement
+		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
+			return ToReturn, err
+		}
+		ToReturn.PList = append(ToReturn.PList, TempPhoto)
 	}
 
 	for rows.Next() {
