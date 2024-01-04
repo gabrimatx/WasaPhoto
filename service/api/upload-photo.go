@@ -23,17 +23,26 @@ type FormFile struct {
 const uploadDirectory = "service/filesystem/"
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// check auth
+	if !CheckValidAuth(r) {
+		ctx.Logger.Error("Auth header invalid")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	// Parse the form data
 	err := r.ParseMultipartForm(10 << 20) // memory limit
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error parsing multipart form: %s", err.Error()), http.StatusBadRequest)
+		ctx.Logger.Error("Bad multiform data")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// get photo from form
 	file, handler, err := r.FormFile("file")
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error retrieving the file: %s", err.Error()), http.StatusBadRequest)
+		ctx.Logger.Error("Bad photo file")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
@@ -43,27 +52,27 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	var photoData components.Photo
 	err = json.Unmarshal([]byte(additionalData), &photoData)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error decoding additional data: %s", err.Error()), http.StatusBadRequest)
+		ctx.Logger.Error("Bad json data parsing")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// add photo info to database
 	photoID, err := rt.db.UploadPhoto(photoData)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error creating photo: %s", err.Error()), http.StatusInternalServerError)
+		ctx.Logger.WithError(err).Error("Error creating database row for the photo")
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	// save photo to filesystem
 	err = saveUploadedFile(file, handler, photoID)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error saving photo to filesystem: %s", err.Error()), http.StatusInternalServerError)
+		ctx.Logger.WithError(err).Error("Error creating database file in the filesystem")
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	response := map[string]uint64{"photoID": photoID}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -75,14 +84,14 @@ func saveUploadedFile(file multipart.File, handler *multipart.FileHeader, photoI
 	// create file
 	out, err := os.Create(fileName)
 	if err != nil {
-		return fmt.Errorf("error creating the file: %s", err.Error())
+		return err
 	}
 	defer out.Close()
 
 	// copy file content to new file
 	_, err = io.Copy(out, file)
 	if err != nil {
-		return fmt.Errorf("error copying the file: %s", err.Error())
+		return err
 	}
 
 	return nil

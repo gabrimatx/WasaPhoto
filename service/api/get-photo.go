@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -13,19 +12,16 @@ import (
 )
 
 func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
+		ctx.Logger.Error("Bad id")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	//check if not banned from photo
 
 	// get photo from filesystem
-	path := "service/filesystem/" + fmt.Sprint(id) + ".jpg"
+	path := "service/filesystem/" + strconv.FormatUint(id, 10) + ".jpg"
 	photofile, err := os.Open(path)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Photo does not exists")

@@ -2,10 +2,8 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 
 	components "github.com/gabrimatx/WasaPhoto/service"
 	"github.com/gabrimatx/WasaPhoto/service/api/reqcontext"
@@ -14,36 +12,29 @@ import (
 )
 
 func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	if r.Method != http.MethodDelete {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
+		ctx.Logger.Error("Bad id")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	authHeader := r.Header.Get("Authorization")
-	if authHeader == "" {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	authParts := strings.Fields(authHeader)
-	if len(authParts) != 2 || authParts[0] != "Bearer" {
-		http.Error(w, "Invalid token format", http.StatusUnauthorized)
-		return
-	}
-
-	token := authParts[1]
-
 	userId, err := rt.db.GetUserIdFromPhotoId(id)
-	if token == fmt.Sprint(userId) {
-		fmt.Fprint(w, "Access granted!")
-	} else {
-		http.Error(w, "Invalid token", http.StatusUnauthorized)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Bad database fetch")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	ans := CheckIdAuthorized(r, userId)
+	if ans != 0 {
+		if ans == 2 {
+			ctx.Logger.WithField("id", id).Error("Can't authorize user")
+			w.WriteHeader(http.StatusForbidden)
+		} else {
+			ctx.Logger.WithField("id", id).Error("Auth header invalid")
+			w.WriteHeader(http.StatusUnauthorized)
+		}
 		return
 	}
 
@@ -58,6 +49,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// delete photo from database
 	err = rt.db.DeletePhoto(id)
 	if errors.Is(err, components.ErrObjNotExists) {
+		ctx.Logger.Error("Photo not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	} else if err != nil {
@@ -65,6 +57,4 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }

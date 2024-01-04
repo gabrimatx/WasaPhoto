@@ -10,9 +10,8 @@ func RemovePhoto(idPhoto uint64) error {
 
 	err := os.Remove(fileName)
 	if err != nil {
-		return fmt.Errorf("error removing file: %v", err)
+		return err
 	}
 
-	fmt.Printf("Photo %s removed successfully\n", fileName)
 	return nil
 }
