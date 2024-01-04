@@ -14,6 +14,11 @@ type Comment struct {
 	Text_Comment string
 }
 
+type CommentListElement struct {
+	PublisherId uint64
+	commentText string
+}
+
 type PhotoListElement struct {
 	Id          uint64 `json:"id"`
 	ReleaseDate string `json:"date"`

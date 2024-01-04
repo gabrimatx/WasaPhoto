@@ -95,7 +95,16 @@ paths:
         - photos
       responses:
         "200":
-          $ref: "#/components/responses/OK"
+          description: Photo returned successfully
+          content:
+            img/jpg:
+              schema:
+                type: string
+                format: binary
+                description: the photo file
+                pattern: ".*"
+                minLength: 1
+                maxLength: 100000000000000
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -156,6 +165,29 @@ paths:
   /photos/{photoId}/comments/:
     parameters:
       - $ref: "#/components/parameters/photoId"
+    
+    get:
+      operationId: getComments
+      description: Get all the comments of the photo
+      summary: get the comments
+      tags:
+        - comments
+      responses:
+        "200":
+          description: Comment list returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The comments of the photo
+                items: { $ref: "#/components/schemas/CommentListElement" }
+                minItems: 0
+                maxItems: 50
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      
     post:
       operationId: commentPhoto
       description: Post a comment to the photo browsed.
@@ -236,7 +268,34 @@ paths:
       summary: Get the photos of the user.
       responses:
         "200":
-          $ref: "#/components/responses/OK"
+          description: user profile returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  photos:
+                    type: array
+                    description: The ids of the photos in the array
+                    items: { $ref: "#/components/schemas/PhotoListElement" }
+                    minItems: 0
+                    maxItems: 20
+                  followCount:
+                    type: integer
+                    example: 0
+                    description: number of users that follow the user
+                  followedCount:
+                    type: integer
+                    example: 0 
+                    description: number of users that the user follows
+                  isBanned:
+                    type: boolean
+                    example: true
+                    description: if you banned the user
+                  isFollowed:
+                    type: boolean
+                    example: false
+                    description: if you follow the user
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -273,7 +332,15 @@ paths:
         - users
       responses:
         "200":
-          $ref: "#/components/responses/OK"
+          description: Photo list returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The ids of the photos in the array
+                items: { $ref: "#/components/schemas/PhotoListElement" }
+                minItems: 0
+                maxItems: 20
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -469,6 +536,7 @@ components:
           pattern: ".*"
         additionalData:
           type: object
+          description: additional information
           properties:
             Caption:
               description: Photo Caption written by the user.
@@ -477,18 +545,66 @@ components:
               pattern: ".*"
               minLength: 0
               maxLength: 100
+    PhotoListElement:
+      title: PhotoListElement
+      description: This object is a component of the photo list returned 
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: id of the photo
+        likeCount:
+          type: integer
+          example: 0
+          description: amount of likes
+        publisherId:
+          type: integer
+          example: 2
+          description: id of the user that published the photo
+        caption:
+          type: string
+          description: caption of the photo in the list
+          example: daje
+          maxLength: 1000
+          minLength: 0
+          pattern: ".*"
+        releaseDate:
+          type: string
+          format: date-time
+          example: '2017-07-21T17:32:28Z'
+          minLength: 20
+          maxLength: 20
+          description: date of the photo release 
     Comment:
       title: Comment
       description: Comment of a published photo.
       type: object
       properties:
-        text_comment:
+        commentText:
           description: Text content of the comment.
           type: string
           example: Nice photo!
           minLength: 0
           maxLength: 1000
           pattern: ".*"
+    CommentListElement:
+      description: element of the comment list
+      title: CommentListElement
+      type: object
+      properties:
+        publisherId:
+          description: id of the user that published the comment
+          type: integer
+          example: 1
+        commentText:          
+          description: Text content of the comment.
+          type: string
+          example: Nice photo!
+          minLength: 0
+          maxLength: 1000
+          pattern: ".*"
+        
 
 security:
   - bearerAuth: []
