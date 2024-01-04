@@ -21,7 +21,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	if ans != 0 {
 		if ans == 2 {
 			ctx.Logger.WithField("id", id).Error("Can't authorize user")
-			w.WriteHeader(http.StatusUnauthorized)
+			w.WriteHeader(http.StatusForbidden)
 		} else {
 			ctx.Logger.WithField("id", id).Error("Auth header invalid")
 			w.WriteHeader(http.StatusUnauthorized)

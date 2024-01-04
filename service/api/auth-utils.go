@@ -25,3 +25,17 @@ func CheckIdAuthorized(r *http.Request, id uint64) int {
 
 	return 0
 }
+
+func CheckValidAuth(r *http.Request) bool {
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		return false
+	}
+
+	authParts := strings.Fields(authHeader)
+	if len(authParts) != 2 || authParts[0] != BEAR {
+		return false
+	}
+
+	return true
+}
