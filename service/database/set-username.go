@@ -4,6 +4,6 @@ func (db *appdbimpl) SetUsername(UserId uint64, new_username string) error {
 	_, err := db.c.Exec(
 		`UPDATE Users 
 	     SET Name = ?
-		 WHERE Id = ?`, new_username, UserId)
+		 WHERE UserId = ?`, new_username, UserId)
 	return err
 }

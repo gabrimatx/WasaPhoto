@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -26,21 +25,20 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 
 	authHeader := r.Header.Get("Authorization")
 	if authHeader == "" {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
 	authParts := strings.Fields(authHeader)
-	if len(authParts) != 2 || authParts[0] != "Bearer" {
-		http.Error(w, "Invalid token format", http.StatusUnauthorized)
+	if len(authParts) != 2 || authParts[0] != BEAR {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
 	token := authParts[1]
-	if token == fmt.Sprint(id) {
-		fmt.Fprint(w, "Access granted!")
-	} else {
-		http.Error(w, "Invalid token", http.StatusUnauthorized)
+
+	if token != strconv.FormatUint(id, 10) {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
