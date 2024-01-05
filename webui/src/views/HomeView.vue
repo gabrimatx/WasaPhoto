@@ -1,26 +1,13 @@
 <script>
-import PhotoCanvas from "@/components/PhotoCanvas.vue";
 export default {
-	components: {
-		PhotoCanvas,
-	},
-	data: function () {
+	data: function() {
 		return {
 			errormsg: null,
 			loading: false,
 			some_data: null,
-
-			publisherName: "John Doe",
-			likeCount: 42,
-			isLiked: true,
-		};
+		}
 	},
 	methods: {
-		async loadPhoto() {
-		this.loading = true
-		this.errormsg = null
-		let response = await this.$axios.get("/photos/1")
-		},
 		async refresh() {
 			this.loading = true;
 			this.errormsg = null;
@@ -32,28 +19,9 @@ export default {
 			}
 			this.loading = false;
 		},
-		fetchImage() {
-			const imageUrl = 'http://your-backend-server.com/path/to/your/image.jpg';
-
-			axios
-				.get(imageUrl, {
-					responseType: 'arraybuffer', // This is important for handling binary data like images
-				})
-				.then((response) => {
-					const base64Image = btoa(
-						new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
-					);
-
-					this.imageSrc = `data:${response.headers['content-type']};base64,${base64Image}`;
-				})
-				.catch((error) => {
-					console.error('Error fetching image:', error);
-				});
-		},
 	},
 	mounted() {
 		this.refresh()
-		this.fetchImage()
 	}
 }
 </script>
@@ -79,9 +47,10 @@ export default {
 				</div>
 			</div>
 		</div>
-		<photo-canvas :photo-url="imageSrc" :publisher-name="publisherName" :like-count="likeCount"
-			:is-liked="isLiked"></photo-canvas>
+
+		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 	</div>
 </template>
 
-<style></style>
+<style>
+</style>
