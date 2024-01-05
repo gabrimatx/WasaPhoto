@@ -280,6 +280,13 @@ paths:
                     items: { $ref: "#/components/schemas/PhotoListElement" }
                     minItems: 0
                     maxItems: 20
+                  userName:
+                    type: string
+                    description: name of the user
+                    example: Maria
+                    pattern: ".*"
+                    minLength: 3
+                    maxLength: 16
                   followCount:
                     type: integer
                     example: 0

@@ -13,3 +13,13 @@ func (db *appdbimpl) GetUser(Username string) (uint64, error) {
 	return Id, err
 
 }
+
+func (db *appdbimpl) GetUserName(userId uint64) (string, error) {
+	var name string
+	err := db.c.QueryRow("SELECT Name FROM Users WHERE UserId = ?", userId).Scan(&name)
+	if err == sql.ErrNoRows {
+		return "", nil
+	}
+	return name, err
+
+}

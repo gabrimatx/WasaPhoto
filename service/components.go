@@ -27,10 +27,11 @@ type CommentList struct {
 
 type Response struct {
 	PhotoList
-	FollowCount   int  `json:"followCount"`
-	FollowedCount int  `json:"followedCount"`
-	IsFollowed    bool `json:"isFollowed"`
-	IsBanned      bool `json:"isBanned"`
+	UserName      string `json:"userName"`
+	FollowCount   int    `json:"followCount"`
+	FollowedCount int    `json:"followedCount"`
+	IsFollowed    bool   `json:"isFollowed"`
+	IsBanned      bool   `json:"isBanned"`
 }
 
 type PhotoListElement struct {

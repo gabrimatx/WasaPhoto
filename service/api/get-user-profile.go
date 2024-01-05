@@ -34,9 +34,11 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	myId := GetIdFromBearer(r)
 
-	hisId, err := rt.db.GetUserIdFromPhotoId(id)
+	hisId := id
+
+	userName, err := rt.db.GetUserName(hisId)
 	if err != nil {
-		ctx.Logger.WithError(err).Error("Error during id getting")
+		ctx.Logger.WithError(err).Error("Error during name getting")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -88,6 +90,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	response := components.Response{
 		PhotoList:     photoStream,
+		UserName:      userName,
 		FollowCount:   followCount,
 		FollowedCount: followingCount,
 		IsBanned:      isBanned,
