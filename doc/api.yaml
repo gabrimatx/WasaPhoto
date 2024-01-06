@@ -397,8 +397,8 @@ paths:
             application/json:
               schema:
                 type: array
-                description: The ids of the photos in the array
-                items: { $ref: "#/components/schemas/PhotoListElement" }
+                description: The photo infos in the array
+                items: { $ref: "#/components/schemas/PhotoStreamListElement" }
                 minItems: 0
                 maxItems: 20
         "401":
@@ -632,6 +632,40 @@ components:
           type: integer
           example: 2
           description: id of the user that published the photo
+        caption:
+          type: string
+          description: caption of the photo in the list
+          example: daje
+          maxLength: 1000
+          minLength: 0
+          pattern: ".*"
+        releaseDate:
+          type: string
+          format: date-time
+          example: "2017-07-21T17:32:28Z"
+          minLength: 20
+          maxLength: 20
+          description: date of the photo release
+    PhotoStreamListElement:
+      title: PhotoListElement
+      description: This object is a component of the photo list returned
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: id of the photo
+        likeCount:
+          type: integer
+          example: 0
+          description: amount of likes
+        publisherName:
+          type: string
+          example: gabrimat
+          description: id of the user that published the photo
+          minLength: 3
+          maxLength: 16
+          pattern: ".*"
         caption:
           type: string
           description: caption of the photo in the list

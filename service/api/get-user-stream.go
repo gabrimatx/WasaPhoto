@@ -30,7 +30,7 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	var photoStream components.PhotoList
+	var photoStream components.PhotoStreamList
 	photoStream, err = rt.db.GetUserStream(id)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error during stream getting")

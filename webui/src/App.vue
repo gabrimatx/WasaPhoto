@@ -1,6 +1,13 @@
 <script>
+const token = sessionStorage.getItem('authToken');
 import { RouterLink, RouterView } from 'vue-router'
 export default {
+	data() {
+		return {
+			mypath: "/users/" + token,
+			streampath: "/users/" + token + "/stream/",
+		}
+	},
 	methods: {
 		logout() {
 			localStorage.clear();
@@ -31,15 +38,15 @@ export default {
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<RouterLink to="/" class="nav-link">
+							<RouterLink :to="mypath" class="nav-link">
 								<svg class="feather">
 									<use href="/feather-sprite-v4.29.0.svg#home" />
 								</svg>
-								Home
+								My profile
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/link1" class="nav-link">
+							<RouterLink :to="streampath" class="nav-link">
 								<svg class="feather">
 									<use href="/feather-sprite-v4.29.0.svg#list" />
 								</svg>

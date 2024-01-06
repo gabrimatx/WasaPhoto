@@ -42,6 +42,18 @@ type PhotoListElement struct {
 	Likes       int    `json:"likecount"`
 }
 
+type PhotoStreamListElement struct {
+	Id            uint64 `json:"id"`
+	ReleaseDate   string `json:"date"`
+	Caption       string `json:"caption"`
+	PublisherName string `json:"publisherName"`
+	Likes         int    `json:"likecount"`
+}
+
 type PhotoList struct {
 	PList []PhotoListElement
+}
+
+type PhotoStreamList struct {
+	PList []PhotoStreamListElement
 }

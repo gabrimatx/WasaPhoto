@@ -4,8 +4,8 @@ import (
 	components "github.com/gabrimatx/WasaPhoto/service"
 )
 
-func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) {
-	var ToReturn components.PhotoList
+func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoStreamList, error) {
+	var ToReturn components.PhotoStreamList
 	rows, err := db.c.Query(
 		`
 		SELECT * 
@@ -26,16 +26,26 @@ func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoList, error) 
 	if !rows.Next() {
 		return ToReturn, err
 	} else {
-		var TempPhoto components.PhotoListElement
-		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
+		var TempPhoto components.PhotoStreamListElement
+		var userId uint64
+		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &userId, &TempPhoto.Likes); err != nil {
+			return ToReturn, err
+		}
+		TempPhoto.PublisherName, err = db.GetUserName(userId)
+		if err != nil {
 			return ToReturn, err
 		}
 		ToReturn.PList = append(ToReturn.PList, TempPhoto)
 	}
 
 	for rows.Next() {
-		var TempPhoto components.PhotoListElement
-		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
+		var TempPhoto components.PhotoStreamListElement
+		var userId uint64
+		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &userId, &TempPhoto.Likes); err != nil {
+			return ToReturn, err
+		}
+		TempPhoto.PublisherName, err = db.GetUserName(userId)
+		if err != nil {
 			return ToReturn, err
 		}
 		ToReturn.PList = append(ToReturn.PList, TempPhoto)

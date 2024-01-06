@@ -14,7 +14,7 @@
       </div>
 
       <button type="submit" class="btn btn-info" style="font-size: 30px;">Upload</button>
-      <p v-if="uploadSuccess" class="success-message">Photo uploaded successfully!</p>
+      <p v-if="uploadSuccess" class="success-message">{{ endText }}</p>
     </form>
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
       photo: null,
       caption: '',
       uploadSuccess: false,
+      endText: '',
     };
   },
   methods: {
@@ -55,10 +56,21 @@ export default {
       try {
         const response = await this.$axios.post(`/photos/`, formData, config);
         console.log('Photo uploaded successfully', response.data);
+        this.endText = "Photo uploaded!";
         this.uploadSuccess = true;
       }
       catch (error) {
-        console.error('Error', error)
+        const statusCode = error.response.status;
+        switch (statusCode) {
+                        case 401:
+                            console.error('Access Unauthorized');
+                            // unauthorized
+                            this.endText = "You have to log in to post a photo";
+                            this.uploadSuccess = true;
+                            break;
+                        default:
+                            console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
+                    }
       }
 
     },

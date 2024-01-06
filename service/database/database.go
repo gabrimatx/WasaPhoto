@@ -20,7 +20,7 @@ type AppDatabase interface {
 	DeleteUser(UserId uint64) error
 	GetUser(Username string) (uint64, error)
 	GetUserName(userId uint64) (string, error)
-	GetUserStream(UserId uint64) (components.PhotoList, error)
+	GetUserStream(UserId uint64) (components.PhotoStreamList, error)
 	GetProfilePhotos(UserId uint64) (components.PhotoList, error)
 
 	// comments
