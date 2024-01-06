@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5" v-if="notBanned">
     <div class="center-container">
       <div class="card photo-card">
         <button v-if="isMe" @click="deletePhoto" class="btn btn-danger delete-button">
@@ -59,6 +59,7 @@ export default {
       LikeCount: this.likeCount,
       authorId: 0,
       isMe: false,
+      notBanned: true,
     };
   },
 
@@ -81,7 +82,28 @@ export default {
         this.isLiked = isL.data.isLiked
         this.findAuthorId();
       } catch (error) {
-        console.error('Failed to fetch photo details:', error);
+        if (error.response) {
+                    const statusCode = error.response.status;
+                    this.notBanned=false;
+                    switch (statusCode) {
+                        case 401:
+                            console.error('Access Unauthorized:', error.response.data);
+                            // unauthorized
+                            break;
+                        case 403:
+                            console.error('Access Forbidden:', error.response.data);
+                            // forbidden
+                            break;
+                        case 404:
+                            console.error('Not Found:', error.response.data);
+                            // not found
+                            break;
+                        default:
+                            console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
+                    }
+                } else {
+                    console.error('Error:', error);
+                }
       }
     }
   },

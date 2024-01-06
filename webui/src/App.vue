@@ -92,6 +92,14 @@ export default {
 								Upload photo
 							</RouterLink>
 						</li>
+						<li class="nav-item">
+							<RouterLink to="/change-name/" class="nav-link">
+								<svg class="feather">
+									<use href="/feather-sprite-v4.29.0.svg#edit-3" />
+								</svg>
+								Change my username
+							</RouterLink>
+						</li>
 					</ul>
 				</div>
 			</nav>

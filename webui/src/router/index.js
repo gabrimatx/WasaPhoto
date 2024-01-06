@@ -5,6 +5,8 @@ import ProfileView from '../views/ProfileView.vue'
 import PostPhotoView from '../views/PostPhotoView.vue'
 import UserSearchView from '../views/UserSearchView.vue'
 import StreamView from '../views/StreamView.vue'
+import ChangeUsernameView from '../views/ChangeUsernameView.vue'
+
 
 
 const router = createRouter({
@@ -13,6 +15,7 @@ const router = createRouter({
 		{path: '/', component: LoginView},
 		{path: '/session/', component: LoginView},
 		{path: '/logout/', component: LogoutView},
+		{path: '/change-name/', component: ChangeUsernameView},
 		{path: '/photos/', component: PostPhotoView},
 		{path: '/users/', component: UserSearchView},
 		{path: '/users/:userId', component: ProfileView},
