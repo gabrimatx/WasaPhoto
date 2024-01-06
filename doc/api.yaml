@@ -254,6 +254,34 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /users/:
+    get:
+      operationId: getUserId
+      description: Get user by username, fetch the id from the database if the user exists
+      summary: UserId by name
+      tags:
+        - users
+      parameters:
+        - $ref: "#/components/parameters/userName"
+      responses:
+        "200":
+          description: User id found and returned
+          content:
+            application/json:
+              schema:
+                type: object
+                description: json containing the user Id
+                properties:
+                  userId:
+                    type: integer
+                    example: 1
+                    description: Id of the user
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+      
 
   /users/{userId}:
     parameters:
@@ -494,6 +522,16 @@ components:
             $ref: "#/components/schemas/ResponseMessage"
 
   parameters:
+    userName:
+      in: query
+      name: userName
+      required: false
+      schema: 
+        description: Name of the user
+        example: Gabriele
+        minLength: 3
+        maxLength: 16
+        pattern: ".*"
     photoId:
       in: path
       name: photoId
