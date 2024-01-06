@@ -11,8 +11,10 @@
         </div>
         <div class="actions">
           <button @click="likePhoto" class="btn btn-sm btn-outline-primary">Like</button>
-          <span class="like-counter">{{ likeCount }} Likes</span>
-          <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary">Comment</button>
+          <span class="like-counter">{{ likeCount }} Likes <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#thumbs-up"/></svg></span>
+          <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary">Comment <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg></button>
+          <button @click="viewComments" class="btn btn-sm btn-outline-secondary">View Comments <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#message-square"/></svg></button>
+
         </div>
       </div>
     </div>

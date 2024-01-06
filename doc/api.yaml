@@ -131,6 +131,32 @@ paths:
     parameters:
       - $ref: "#/components/parameters/photoId"
       - $ref: "#/components/parameters/userId"
+    
+    get:
+      operationId: getLike
+      description: Get if the photo is liked by the user
+      summary: bool isLiked
+      tags:
+        - likes
+      responses:
+        "200":
+          description: Like bool returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                description: JSON of like bool
+                properties:
+                  isLiked:
+                    type: boolean
+                    description: the bool
+                    example: true    
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       operationId: likePhoto

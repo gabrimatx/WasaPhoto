@@ -3,21 +3,21 @@
         <div v-if="found" class="user-info">
             <h1>{{ userName }}</h1>
             <div>Followers: {{ followCount }}</div>
-            <div>Following: {{ followedCount }}</div>
+            <div>Followed: {{ followedCount }}</div>
             <div>Banned: {{ isBanned ? 'Yes' : 'No' }}</div>
             <div>Followed: {{ isFollowed ? 'Yes' : 'No' }}</div>
-            <div class="buttons">
+            <div class="buttons" v-if="!isItMe">
                 <button @click="toggleFollow" class="btn btn-outline-warning">
-                    {{ isFollowed ? 'Unfollow' : 'Follow' }}
+                    {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-plus"/></svg>
                 </button>
                 <button @click="toggleBan" class="btn btn-outline-danger">
-                    {{ isBanned ? 'Unban' : 'Ban' }}
+                    {{ isBanned ? 'Unban' : 'Ban' }} <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#slash"/></svg>
                 </button>
             </div>
             <hr />
         </div>
         <div v-else>
-          <center> <h1>{{ userName }}</h1> </center>
+          <v-center> <h1>{{ userName }}</h1> </v-center>
         </div>
         <div class="photos">
             <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="userName"
@@ -39,10 +39,13 @@ export default {
             followedCount: 0,
             isBanned: false,
             isFollowed: false,
+            isItMe: false,
             photoList: [],
         };
     },
     async created() {
+        const userId = this.$route.params.userId;
+        this.isItMe = (userId == token);
         this.fetchUserData();
     },
     methods: {

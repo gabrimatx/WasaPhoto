@@ -30,14 +30,26 @@ export default {}
 						</li>
 						<li class="nav-item">
 							<RouterLink to="/link1" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#layout"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#list"/></svg>
 								Stream
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink to="/link1" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+								Search user
 							</RouterLink>
 						</li>
 						<li class="nav-item">
 							<RouterLink to="/session/" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
 								Login
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink to="/session/" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-out"/></svg>
+								Logout
 							</RouterLink>
 						</li>
 					</ul>
@@ -48,7 +60,7 @@ export default {}
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<RouterLink :to="'/some/' + 'variable_here' + '/path'" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#file-text"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#upload"/></svg>
 								Upload photo
 							</RouterLink>
 						</li>
