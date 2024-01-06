@@ -1,30 +1,30 @@
 <template>
-    <div class="user-profile">
-        <div v-if="found" class="user-info">
-            <h1>{{ userName }}</h1>
-            <div>Followers: {{ followCount }}</div>
-            <div>Followed: {{ followedCount }}</div>
+    <div class="container mt-5">
+        <div class="user-info">
+            <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
+            <div v-if="found">
+                <div>Followers: {{ followCount }}</div>
+                <div>Followed: {{ followedCount }}</div>
 
-            <div class="buttons" v-if="!isItMe">
-                <div class="user-info">Banned: {{ isBanned ? 'Yes' : 'No' }}</div>
-                <div class="user-info">Followed: {{ isFollowed ? 'Yes' : 'No' }}</div>
-                <button @click="toggleFollow" class="btn btn-outline-warning">
-                    {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather">
-                        <use href="/feather-sprite-v4.29.0.svg#user-plus" />
-                    </svg>
-                </button>
-                <button @click="toggleBan" class="btn btn-outline-danger">
-                    {{ isBanned ? 'Unban' : 'Ban' }} <svg class="feather">
-                        <use href="/feather-sprite-v4.29.0.svg#slash" />
-                    </svg>
-                </button>
+
+                <div v-if="!isItMe">
+                    <div class="user-info">Banned: {{ isBanned ? 'Yes' : 'No' }}</div>
+                    <div class="user-info">Followed: {{ isFollowed ? 'Yes' : 'No' }}</div>
+                    <div class="btn-group mt-3">
+                        <button @click="toggleFollow" class="btn btn-warning">
+                            {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather">
+                                <use href="/feather-sprite-v4.29.0.svg#user-plus" />
+                            </svg>
+                        </button>
+                        <button @click="toggleBan" class="btn btn-danger">
+                            {{ isBanned ? 'Unban' : 'Ban' }} <svg class="feather">
+                                <use href="/feather-sprite-v4.29.0.svg#slash" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
             <hr />
-        </div>
-        <div v-else>
-            <v-center>
-                <h1>{{ userName }}</h1>
-            </v-center>
         </div>
         <div class="photos">
             <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="userName"
@@ -38,6 +38,14 @@ import PhotoCard from '@/components/PhotoCard.vue';
 const token = sessionStorage.getItem('authToken');
 
 export default {
+    mounted() {
+        if (localStorage.getItem('reloadedstream')) {
+            localStorage.removeItem('reloadedstream');
+        } else {
+            localStorage.setItem('reloadedstream', '1');
+            location.reload();
+        }
+    },
     data() {
         return {
             userName: '',
@@ -51,13 +59,12 @@ export default {
             reloadFlag: true,
         };
     },
-    mounted() {
-        if (localStorage.getItem('reloaded')) {
-            localStorage.removeItem('reloaded');
-        } else {
-            localStorage.setItem('reloaded', '1');
-            location.reload();
-        }
+    watch: {
+        '$route.params.userId'(newParam, oldParam) {
+            if (newParam !== oldParam) {
+                this.refresh();
+            }
+        },
     },
     async created() {
         const userId = this.$route.params.userId;
@@ -65,6 +72,9 @@ export default {
         this.fetchUserData();
     },
     methods: {
+        refresh() {
+            location.reload();
+        },
         async fetchUserData() {
             const userId = this.$route.params.userId;
             try {
@@ -97,7 +107,12 @@ export default {
                         case 404:
                             console.error('Not Found:', error.response.data);
                             // not found
-                            this.userName = "User not found"
+                            if (userId === "null") {
+                                this.userName = "You are not logged in";
+                            }
+                            else {
+                                this.userName = "User not found";
+                            }
                             break;
                         default:
                             console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
@@ -162,29 +177,9 @@ export default {
 </script>
   
 <style scoped>
-.user-profile {
-    font-family: 'serif';
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
 .user-info {
     text-align: center;
     font-size: 20px;
-}
-
-.user-info h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.buttons {
-    margin-top: 10px;
-}
-
-.buttons button {
-    margin-right: 10px;
 }
 
 hr {

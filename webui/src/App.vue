@@ -12,7 +12,7 @@ export default {
 		logout() {
 			localStorage.clear();
 			sessionStorage.clear();
-			this.$router.replace('/session/');
+			location.reload();
 		},
 	},
 

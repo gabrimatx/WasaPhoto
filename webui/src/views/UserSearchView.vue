@@ -1,15 +1,17 @@
 <template>
-    <div class="custom-container">
-        <h2 class="custom-title">User Search</h2>
-        <form @submit.prevent="searchUsers">
-            <label for="searchQuery" style="margin-right: 5px;">Search Users: </label>
-            <input type="text" id="searchQuery" v-model="searchQuery" placeholder="Enter username" />
-            <button type="submit" class="btn btn-sm btn-outline-secondary" style="margin-left: 10px;"
-                @click="searchUsers">Search</button>
-        </form>
-        <p v-if="searchExecuted" style="margin-top: 30px;">{{ Text }}</p>
+    <div class="container mt-5 text-center">
+      <h2 class="display-4 mb-4">User Search</h2>
+      <form @submit.prevent="searchUsers" class="mb-4">
+        <div class="form-group d-flex justify-content-center align-items-center">
+          <label for="searchQuery" class="mr-3" style="font-size: 30px; margin: 20px;">Username: </label>
+          <input type="text" id="searchQuery" v-model="searchQuery" class="form-control" placeholder="Enter username" />
+          <button type="submit" class="btn btn-sm btn-outline-secondary ml-2" @click="searchUsers" style="margin: 20px; font-size: 30px;">Search</button>
+        </div>
+      </form>
+      <p v-if="searchExecuted" class="mt-3" style="font-size: 25px;">{{ Text }}</p>
     </div>
-</template>
+  </template>
+  
   
 <script>
 const token = sessionStorage.getItem('authToken');
@@ -49,18 +51,5 @@ export default {
 </script>
 
 <style scoped>
-.custom-container {
-    max-width: 600px;
-    text-align: center;
-    margin: auto;
-    margin-top: 40px;
-    justify-content: center;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-.custom-title {
-    font-size: 3em;
-    margin-bottom: 20px;
-}
 </style>
   

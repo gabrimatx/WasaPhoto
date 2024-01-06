@@ -1,31 +1,46 @@
 <template>
-  <div class="center-container">
-    <div class="photo-card">
-      <img :src="imgSrc" alt="Photo" class="photo" />
-      <div class="photo-details">
-        <div class="author">Author: {{ authorName }}</div>
-        <div class="caption">
-          <div class="caption-border"></div>
-          <div class="caption-text">{{ caption }}</div>
-          <div class="caption-border"></div>
-        </div>
-        <div class="actions">
-          <button @click="likePhoto" class="btn btn-sm btn-outline-primary">{{ isLiked ? "Unlike" : "Like" }}</button>
-          <span class="like-counter">{{ LikeCount }} Likes <svg class="feather">
-              <use href="/feather-sprite-v4.29.0.svg#thumbs-up" />
-            </svg></span>
-          <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary">Comment <svg class="feather">
-              <use href="/feather-sprite-v4.29.0.svg#message-circle" />
-            </svg></button>
-          <button @click="viewComments" class="btn btn-sm btn-outline-secondary">View Comments <svg class="feather">
-              <use href="/feather-sprite-v4.29.0.svg#message-square" />
-            </svg></button>
+  <div class="container mt-5">
+    <div class="center-container">
+      <div class="card photo-card">
+        <button v-if="isMe" @click="deletePhoto" class="btn btn-danger delete-button">
+          Delete Photo <svg class="feather">
+            <use href="/feather-sprite-v4.29.0.svg#trash-2" />
+          </svg>
+        </button>
 
+        <img :src="imgSrc" alt="Photo" class="card-img-top" />
+        <div class="card-body photo-details">
+          <div class="author">Author: {{ authorName }}</div>
+          <div class="caption">
+            <div class="caption-border"></div>
+            <div class="caption-text">{{ caption }}</div>
+            <div class="caption-border"></div>
+          </div>
+          <div class="actions">
+            <button @click="likePhoto" class="btn btn-sm btn-outline-primary">
+              {{ isLiked ? 'Unlike' : 'Like' }}
+            </button>
+            <span class="like-counter">{{ LikeCount }} Likes <svg class="feather">
+                <use href="/feather-sprite-v4.29.0.svg#thumbs-up" />
+              </svg></span>
+            <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary">
+              Comment <svg class="feather">
+                <use href="/feather-sprite-v4.29.0.svg#message-circle" />
+              </svg>
+            </button>
+            <button @click="viewComments" class="btn btn-sm btn-outline-secondary">
+              View Comments <svg class="feather">
+                <use href="/feather-sprite-v4.29.0.svg#message-square" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+
 
 
 <script>
@@ -42,6 +57,8 @@ export default {
       imgSrc: null,
       isLiked: false,
       LikeCount: this.likeCount,
+      authorId: 0,
+      isMe: false,
     };
   },
 
@@ -62,6 +79,7 @@ export default {
           }
         });
         this.isLiked = isL.data.isLiked
+        this.findAuthorId();
       } catch (error) {
         console.error('Failed to fetch photo details:', error);
       }
@@ -71,6 +89,37 @@ export default {
 
   },
   methods: {
+    async findAuthorId() {
+      try {
+        const response = await this.$axios.get(`/users/`, {
+          params: { userName: this.authorName },
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+          },
+        });
+        this.authorId = response.data.userId;
+        if (this.authorId == token) {
+          this.isMe = true;
+        };
+      }
+      catch (error) {
+        console.error(error, "niente")
+      }
+    },
+    async deletePhoto() {
+      try {
+        const response = await this.$axios.delete(`/photos/${this.photoId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        },);
+        location.reload();
+      }
+      catch (error) {
+        console.error(error, "cant delete!")
+      }
+    },
     async likePhoto() {
       // frontend
       this.isLiked = !this.isLiked;
@@ -116,12 +165,6 @@ export default {
   font-family: 'Arial', sans-serif;
 }
 
-.photo {
-  width: 100%;
-  height: auto;
-  border: 1px solid #ddd;
-}
-
 .photo-details {
   margin-top: 10px;
 }
@@ -135,7 +178,7 @@ export default {
 .actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin: 15px;
 }
 
 .like-counter {
@@ -163,4 +206,5 @@ export default {
 
 .caption-text {
   padding: 0 10px;
-}</style>
+}
+</style>

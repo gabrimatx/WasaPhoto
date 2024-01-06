@@ -17,11 +17,21 @@ export default {
             titlePage: "Your stream",
         }
     },
+    watch: {
+    '$route.params.userId'(newParam, oldParam) {
+      if (newParam !== oldParam) {
+        this.refresh();
+      }
+    },
+  },
     async created() {
         const userId = this.$route.params.userId;
         this.fetchUserData();
     },
     methods: {
+        refresh() {
+            location.reload();
+        },
         async fetchUserData() {
             const userId = this.$route.params.userId;
             try {
@@ -69,13 +79,17 @@ export default {
 
 
 <template>
-    <h1 class="custom-title"> {{ titlePage }} </h1>
-    <hr />
-    <div class="photos">
+    <div class="container mt-5">
+      <h1 class="display-4 mb-4">{{ titlePage }}</h1>
+      <hr />
+  
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="photo.publisherName"
-            :likeCount="photo.likecount" :caption="photo.caption" />
+          :likeCount="photo.likecount" :caption="photo.caption" class="col mb-4" />
+      </div>
     </div>
-</template>
+  </template>
+  
 
 
 <style scoped>
