@@ -72,6 +72,7 @@ export default {
   margin: 0 auto;
   text-align: center;
   justify-content: center;
+  margin-top: 40px;
   font-family: 'Courier New', Courier, monospace;
 }
 

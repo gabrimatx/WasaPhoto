@@ -3,8 +3,9 @@ import { RouterLink, RouterView } from 'vue-router'
 export default {
 	methods: {
 		logout() {
+			localStorage.clear();
 			sessionStorage.clear();
-			this.$router.push('/session/');
+			this.$router.replace('/session/');
 		},
 	},
 
@@ -46,7 +47,7 @@ export default {
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/link1" class="nav-link">
+							<RouterLink to="/users/" class="nav-link">
 								<svg class="feather">
 									<use href="/feather-sprite-v4.29.0.svg#search" />
 								</svg>
@@ -85,13 +86,14 @@ export default {
 							</RouterLink>
 						</li>
 					</ul>
-			</div>
-		</nav>
+				</div>
+			</nav>
 
-		<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-			<RouterView />
-		</main>
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+				<RouterView />
+			</main>
+		</div>
 	</div>
-</div></template>
+</template>
 
 <style></style>

@@ -48,7 +48,16 @@ export default {
             isFollowed: false,
             isItMe: false,
             photoList: [],
+            reloadFlag: true,
         };
+    },
+    mounted() {
+        if (localStorage.getItem('reloaded')) {
+            localStorage.removeItem('reloaded');
+        } else {
+            localStorage.setItem('reloaded', '1');
+            location.reload();
+        }
     },
     async created() {
         const userId = this.$route.params.userId;
@@ -191,6 +200,7 @@ hr {
 .photos .photo-card {
     width: 200px;
     margin-bottom: 30px;
-}</style>
+}
+</style>
   
   
