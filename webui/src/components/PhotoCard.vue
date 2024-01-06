@@ -10,10 +10,16 @@
           <div class="caption-border"></div>
         </div>
         <div class="actions">
-          <button @click="likePhoto" class="btn btn-sm btn-outline-primary">Like</button>
-          <span class="like-counter">{{ likeCount }} Likes <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#thumbs-up"/></svg></span>
-          <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary">Comment <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg></button>
-          <button @click="viewComments" class="btn btn-sm btn-outline-secondary">View Comments <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#message-square"/></svg></button>
+          <button @click="likePhoto" class="btn btn-sm btn-outline-primary">{{ isLiked ? "Unlike" : "Like" }}</button>
+          <span class="like-counter">{{ LikeCount }} Likes <svg class="feather">
+              <use href="/feather-sprite-v4.29.0.svg#thumbs-up" />
+            </svg></span>
+          <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary">Comment <svg class="feather">
+              <use href="/feather-sprite-v4.29.0.svg#message-circle" />
+            </svg></button>
+          <button @click="viewComments" class="btn btn-sm btn-outline-secondary">View Comments <svg class="feather">
+              <use href="/feather-sprite-v4.29.0.svg#message-square" />
+            </svg></button>
 
         </div>
       </div>
@@ -26,7 +32,7 @@
 const token = sessionStorage.getItem('authToken');
 export default {
   props: {
-    photoId: Number, 
+    photoId: Number,
     likeCount: Number,
     authorName: String,
     caption: Text,
@@ -34,6 +40,8 @@ export default {
   data() {
     return {
       imgSrc: null,
+      isLiked: false,
+      LikeCount: this.likeCount,
     };
   },
 
@@ -44,10 +52,16 @@ export default {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          responseType: 'blob', 
+          responseType: 'blob',
         });
         const imageUrl = URL.createObjectURL(response.data);
-        this.imgSrc = imageUrl; 
+        this.imgSrc = imageUrl;
+        const isL = await this.$axios.get(`/photos/${this.photoId}/likes/${token}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        this.isLiked = isL.data.isLiked
       } catch (error) {
         console.error('Failed to fetch photo details:', error);
       }
@@ -57,13 +71,30 @@ export default {
 
   },
   methods: {
-    likePhoto() {
-      // Implement the logic to handle the like button click
-      // You may want to send a request to the backend to update the like count
+    async likePhoto() {
+      // frontend
+      this.isLiked = !this.isLiked;
+      // backend
+      const token = sessionStorage.getItem('authToken');
+      if (this.isLiked) {
+        this.LikeCount += 1;
+        await this.$axios.put(`/photos/${this.photoId}/likes/${token}`, {
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      } else {
+        this.LikeCount -= 1;
+        await this.$axios.delete(`/photos/${this.photoId}/likes/${token}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+      }
     },
     commentPhoto() {
-      // Implement the logic to handle the comment button click
-      // You can navigate to a comment page or show a comment form, for example
     },
   },
 };
@@ -80,7 +111,7 @@ export default {
   border: 3px solid #6d6969;
   border-radius: 4px;
   padding: 10px;
-  width: 400px; 
+  width: 450px;
   text-align: center;
   font-family: 'Arial', sans-serif;
 }
@@ -127,11 +158,9 @@ export default {
   padding: 4px;
   margin-top: 10px;
   margin-bottom: 10px;
-  
+
 }
 
 .caption-text {
   padding: 0 10px;
-}
-
-</style>
+}</style>
