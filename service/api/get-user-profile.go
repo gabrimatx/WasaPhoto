@@ -42,6 +42,12 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	if userName == "" {
+		ctx.Logger.WithError(err).Error("Error user not found")
+		w.WriteHeader(http.StatusNotFound)
+		return
+
+	}
 
 	isBan, err := rt.db.GetBoolBanned(myId, hisId)
 	if err != nil {
@@ -52,7 +58,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	if isBan {
 		ctx.Logger.Error("Banned")
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 

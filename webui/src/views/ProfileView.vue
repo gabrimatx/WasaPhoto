@@ -1,6 +1,6 @@
 <template>
     <div class="user-profile">
-        <div class="user-info">
+        <div v-if="found" class="user-info">
             <h1>{{ userName }}</h1>
             <div>Followers: {{ followCount }}</div>
             <div>Following: {{ followedCount }}</div>
@@ -16,6 +16,9 @@
             </div>
             <hr />
         </div>
+        <div v-else>
+          <center> <h1>{{ userName }}</h1> </center>
+        </div>
         <div class="photos">
             <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="userName"
                 :likeCount="photo.likecount" :caption="photo.caption" />
@@ -24,13 +27,14 @@
 </template>
   
 <script>
-import PhotoCard from '@/components/PhotoCard.vue'; // Adjust the path based on your project structure
+import PhotoCard from '@/components/PhotoCard.vue'; 
 const token = sessionStorage.getItem('authToken');
 
 export default {
     data() {
         return {
             userName: '',
+            found: false,
             followCount: 0,
             followedCount: 0,
             isBanned: false,
@@ -39,39 +43,96 @@ export default {
         };
     },
     async created() {
-        // Assuming you have a method to fetch user data based on userId
         this.fetchUserData();
     },
     methods: {
         async fetchUserData() {
             const userId = this.$route.params.userId;
-            const response = await this.$axios.get(`/users/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            this.userName = response.data.userName;
-            this.followCount = response.data.followCount;
-            this.followedCount = response.data.followedCount;
-            this.isBanned = response.data.isBanned;
-            this.isFollowed = response.data.isFollowed;
-            this.photoList = response.data.PList;
+            try {
+                const response = await this.$axios.get(`/users/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                this.found = true;
+                this.userName = response.data.userName;
+                this.followCount = response.data.followCount;
+                this.followedCount = response.data.followedCount;
+                this.isBanned = response.data.isBanned;
+                this.isFollowed = response.data.isFollowed;
+                this.photoList = response.data.PList;
+            } catch (error) {
+                if (error.response) {
+                    const statusCode = error.response.status;
+                    switch (statusCode) {
+                        case 401:
+                            console.error('Access Unauthorized:', error.response.data);
+                            // unauthorized
+                            this.userName = "You are not logged in"
+                            break;
+                        case 403:
+                            console.error('Access Forbidden:', error.response.data);
+                            // forbidden
+                            this.userName = "You have been banned by the user"
+                            break;
+                        case 404:
+                            console.error('Not Found:', error.response.data);
+                            // not found
+                            this.userName = "User not found"
+                            break;
+                        default:
+                            console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
+                    }
+                } else {
+                    console.error('Error:', error);
+                }
+            }
         },
         async toggleFollow() {
             // frontend
             this.isFollowed = !this.isFollowed;
             // backend
             const userId = this.$route.params.userId;
-            await this.$axios.put(`/users/${token}/follows/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const token = sessionStorage.getItem('authToken');
+            if (this.isFollowed) {
+                this.followCount += 1;
+                await this.$axios.put(`/users/${token}/follows/${userId}`, {
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            } else {
+                this.followCount -= 1;
+                await this.$axios.delete(`/users/${token}/follows/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+            }
         },
         async toggleBan() {
             // frontend
             this.isBanned = !this.isBanned;
             // backend
+            const userId = this.$route.params.userId;
+            const token = sessionStorage.getItem('authToken');
+            if (this.isBanned) {
+                await this.$axios.put(`/users/${token}/bans/${userId}`, {
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            } else {
+                await this.$axios.delete(`/users/${token}/bans/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+            }
 
         },
     },

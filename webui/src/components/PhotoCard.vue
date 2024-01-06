@@ -24,14 +24,13 @@
 const token = sessionStorage.getItem('authToken');
 export default {
   props: {
-    photoId: Number, // Assuming you pass the photoId as a prop
+    photoId: Number, 
     likeCount: Number,
     authorName: String,
     caption: Text,
   },
   data() {
     return {
-      photoDetails: null,
       imgSrc: null,
     };
   },
@@ -79,7 +78,7 @@ export default {
   border: 3px solid #6d6969;
   border-radius: 4px;
   padding: 10px;
-  width: 400px; /* Adjust the width as needed */
+  width: 400px; 
   text-align: center;
   font-family: 'Arial', sans-serif;
 }

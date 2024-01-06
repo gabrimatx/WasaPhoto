@@ -33,7 +33,7 @@ func CheckValidAuth(r *http.Request) bool {
 	}
 
 	authParts := strings.Fields(authHeader)
-	if len(authParts) != 2 || authParts[0] != BEAR {
+	if len(authParts) != 2 || authParts[0] != BEAR || authParts[1] == "null" {
 		return false
 	}
 
