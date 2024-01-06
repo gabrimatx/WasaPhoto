@@ -4,20 +4,27 @@
             <h1>{{ userName }}</h1>
             <div>Followers: {{ followCount }}</div>
             <div>Followed: {{ followedCount }}</div>
-            <div>Banned: {{ isBanned ? 'Yes' : 'No' }}</div>
-            <div>Followed: {{ isFollowed ? 'Yes' : 'No' }}</div>
+
             <div class="buttons" v-if="!isItMe">
+                <div class="user-info">Banned: {{ isBanned ? 'Yes' : 'No' }}</div>
+                <div class="user-info">Followed: {{ isFollowed ? 'Yes' : 'No' }}</div>
                 <button @click="toggleFollow" class="btn btn-outline-warning">
-                    {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-plus"/></svg>
+                    {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather">
+                        <use href="/feather-sprite-v4.29.0.svg#user-plus" />
+                    </svg>
                 </button>
                 <button @click="toggleBan" class="btn btn-outline-danger">
-                    {{ isBanned ? 'Unban' : 'Ban' }} <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#slash"/></svg>
+                    {{ isBanned ? 'Unban' : 'Ban' }} <svg class="feather">
+                        <use href="/feather-sprite-v4.29.0.svg#slash" />
+                    </svg>
                 </button>
             </div>
             <hr />
         </div>
         <div v-else>
-          <v-center> <h1>{{ userName }}</h1> </v-center>
+            <v-center>
+                <h1>{{ userName }}</h1>
+            </v-center>
         </div>
         <div class="photos">
             <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="userName"
@@ -27,7 +34,7 @@
 </template>
   
 <script>
-import PhotoCard from '@/components/PhotoCard.vue'; 
+import PhotoCard from '@/components/PhotoCard.vue';
 const token = sessionStorage.getItem('authToken');
 
 export default {
@@ -184,7 +191,6 @@ hr {
 .photos .photo-card {
     width: 200px;
     margin-bottom: 30px;
-}
-</style>
+}</style>
   
   
