@@ -14,14 +14,14 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	id, err := strconv.ParseUint(ps.ByName("commentId"), 10, 64)
 	if err != nil {
 		ctx.Logger.WithField("id", id).Error("Can't find comment")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	userId, err := rt.db.GetUserIdFromCommentId(id)
 	if err != nil {
-		ctx.Logger.WithField("id", id).Error("Comment not found")
-		w.WriteHeader(http.StatusNotFound)
+		ctx.Logger.WithField("id", id).Error("Comment publisher not retrievable")
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
