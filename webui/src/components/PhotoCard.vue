@@ -23,7 +23,7 @@
             <span class="like-counter">{{ LikeCount }} Likes <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#thumbs-up" />
               </svg></span>
-            <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary">
+            <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" :data-bs-target="'#mod' + photoId">
               Comment <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#message-circle" />
               </svg>
@@ -33,6 +33,7 @@
                 <use href="/feather-sprite-v4.29.0.svg#message-square" />
               </svg>
             </button>
+            <CommentModal :photoId="this.photoId" :key="'#mod' + photoId"/>
           </div>
         </div>
       </div>
@@ -44,8 +45,12 @@
 
 
 <script>
+import CommentModal from '@/components/CommentModal.vue';
 const token = sessionStorage.getItem('authToken');
 export default {
+  components: {
+    CommentModal
+  },
   props: {
     photoId: Number,
     likeCount: Number,
