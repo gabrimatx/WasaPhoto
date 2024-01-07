@@ -681,10 +681,21 @@ components:
       title: CommentListElement
       type: object
       properties:
-        publisherId:
-          description: id of the user that published the comment
+        id:
+          description: identifier of the comment
           type: integer
           example: 1
+        photoId:
+          description: identifier of the photo which the comment belongs to
+          example: 1
+          type: integer
+        publisherName:
+          description: name of the user that published the comment
+          type: string
+          example: Maria
+          minLength: 3
+          maxLength: 16
+          pattern: ".*"
         commentText:
           description: Text content of the comment.
           type: string
