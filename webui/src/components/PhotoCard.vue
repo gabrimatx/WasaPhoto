@@ -28,12 +28,13 @@
                 <use href="/feather-sprite-v4.29.0.svg#message-circle" />
               </svg>
             </button>
-            <button @click="viewComments" class="btn btn-sm btn-outline-secondary">
+            <button @click="viewComments" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" :data-bs-target="'#listModal' + modalId">
               View Comments <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#message-square" />
               </svg>
             </button>
             <CommentModal :photoId="this.modalId"/>
+            <CommentListModal :photoId="this.modalId"/>
           </div>
         </div>
       </div>
@@ -46,16 +47,19 @@
 
 <script>
 import CommentModal from '@/components/CommentModal.vue';
+import CommentListModal from '@/components/CommentListModal.vue';
+
 const token = sessionStorage.getItem('authToken');
 export default {
   components: {
-    CommentModal
+    CommentModal,
+    CommentListModal,
   },
   props: {
     photoId: Number,
     likeCount: Number,
     authorName: String,
-    caption: Text,
+    caption: String,
   },
   data() {
     return {

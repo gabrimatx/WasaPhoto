@@ -50,6 +50,7 @@ export default {
                 };
                 const response = await this.$axios.post(`/photos/${this.photoId}/comments/`, { commentText: this.commentText }, config);
                 this.Text = "Comment Posted!";
+                location.reload();
             }
             catch {
                 console.error(error.response.data);
@@ -60,7 +61,6 @@ export default {
     },
     beforeDestroy() {
             window.$(`exampleModal`).modal('dispose');
-        
     },
 };
 </script>
