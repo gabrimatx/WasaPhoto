@@ -689,6 +689,10 @@ components:
           description: identifier of the photo which the comment belongs to
           example: 1
           type: integer
+        publisherId:
+          description: id of the user that published the comment
+          example : 1
+          type: integer
         publisherName:
           description: name of the user that published the comment
           type: string

@@ -19,28 +19,12 @@ func (db *appdbimpl) GetPhotoComments(photoId uint64) (components.CommentList, e
 	}
 	defer rows.Close()
 
-	if !rows.Next() {
-		return ToReturn, err
-	} else {
-		var TempComment components.CommentListElement
-		var PublisherId uint64
-		if err := rows.Scan(&TempComment.Id, &TempComment.PhotoId, &PublisherId, &TempComment.CommentText); err != nil {
-			return ToReturn, err
-		}
-		TempComment.PublisherName, err = db.GetUserName(PublisherId)
-		if err != nil {
-			return ToReturn, err
-		}
-		ToReturn.CList = append(ToReturn.CList, TempComment)
-	}
-
 	for rows.Next() {
 		var TempComment components.CommentListElement
-		var PublisherId uint64
-		if err := rows.Scan(&TempComment.Id, &TempComment.PhotoId, &PublisherId, &TempComment.CommentText); err != nil {
+		if err := rows.Scan(&TempComment.Id, &TempComment.PhotoId, &TempComment.PublisherId, &TempComment.CommentText); err != nil {
 			return ToReturn, err
 		}
-		TempComment.PublisherName, err = db.GetUserName(PublisherId)
+		TempComment.PublisherName, err = db.GetUserName(TempComment.PublisherId)
 		if err != nil {
 			return ToReturn, err
 		}

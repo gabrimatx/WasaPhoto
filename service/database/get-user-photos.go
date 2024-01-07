@@ -19,16 +19,6 @@ func (db *appdbimpl) GetProfilePhotos(UserId uint64) (components.PhotoList, erro
 	}
 	defer rows.Close()
 
-	if !rows.Next() {
-		return ToReturn, err
-	} else {
-		var TempPhoto components.PhotoListElement
-		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
-			return ToReturn, err
-		}
-		ToReturn.PList = append(ToReturn.PList, TempPhoto)
-	}
-
 	for rows.Next() {
 		var TempPhoto components.PhotoListElement
 		if err := rows.Scan(&TempPhoto.Id, &TempPhoto.ReleaseDate, &TempPhoto.Caption, &TempPhoto.PublisherId, &TempPhoto.Likes); err != nil {
