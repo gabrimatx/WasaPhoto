@@ -39,7 +39,6 @@ export default {
     },
     methods: {
         async postComment() {
-            // Handle posting the comment here
             console.log("Posting comment:", this.commentText);
             this.commentPostTry = true;
             try {

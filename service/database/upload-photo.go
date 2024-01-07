@@ -6,7 +6,6 @@ import (
 	components "github.com/gabrimatx/WasaPhoto/service"
 )
 
-// GetName is an example that shows you how to query data
 func (db *appdbimpl) UploadPhoto(photo components.Photo, PublisherId uint64) (uint64, error) {
 	currentTime := time.Now()
 	res, err := db.c.Exec(

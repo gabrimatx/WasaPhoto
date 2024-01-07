@@ -18,7 +18,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	//check if not banned from photo
+
 	if !CheckValidAuth(r) {
 		ctx.Logger.Error("Auth header invalid")
 		w.WriteHeader(http.StatusUnauthorized)

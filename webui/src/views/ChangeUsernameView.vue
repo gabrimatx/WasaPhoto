@@ -49,7 +49,6 @@ export default {
                 this.errore = true;
             }
 
-            // Reset the form after submission
             this.newname = '';
 
         },
