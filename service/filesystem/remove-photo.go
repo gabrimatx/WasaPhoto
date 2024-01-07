@@ -6,7 +6,7 @@ import (
 )
 
 func RemovePhoto(idPhoto uint64) error {
-	fileName := fmt.Sprintf("service/filesystem/%d.jpg", idPhoto)
+	fileName := fmt.Sprintf("/tmp/filesystem/%d.jpg", idPhoto)
 
 	err := os.Remove(fileName)
 	if err != nil {

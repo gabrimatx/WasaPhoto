@@ -47,7 +47,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 	// get photo from filesystem
-	path := "service/filesystem/" + strconv.FormatUint(id, 10) + ".jpg"
+	path := "/tmp/filesystem/" + strconv.FormatUint(id, 10) + ".jpg"
 	photofile, err := os.Open(path)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Photo does not exists")
