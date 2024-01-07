@@ -23,7 +23,7 @@
             <span class="like-counter">{{ LikeCount }} Likes <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#thumbs-up" />
               </svg></span>
-            <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" :data-bs-target="'#mod' + photoId">
+            <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" :data-bs-target="'#usersModal' + modalId">
               Comment <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#message-circle" />
               </svg>
@@ -33,7 +33,7 @@
                 <use href="/feather-sprite-v4.29.0.svg#message-square" />
               </svg>
             </button>
-            <CommentModal :photoId="this.photoId" :key="'#mod' + photoId"/>
+            <CommentModal :photoId="this.modalId"/>
           </div>
         </div>
       </div>
@@ -65,6 +65,7 @@ export default {
       authorId: 0,
       isMe: false,
       notBanned: true,
+      modalId: String(this.photoId),
     };
   },
 
@@ -169,8 +170,6 @@ export default {
         });
 
       }
-    },
-    commentPhoto() {
     },
   },
 };

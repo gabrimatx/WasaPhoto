@@ -1,9 +1,9 @@
 <template>
-    <div class="modal fade" :id="'#mod' + photoId" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="'usersModal' + photoId" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="ModalLabel">Post a comment for photo {{ this.photoId }}</h1>
+                    <h1 class="modal-title fs-5" id="ModalLabel">Post a comment for photo</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -28,7 +28,7 @@ const token = sessionStorage.getItem('authToken');
 
 export default {
     props: {
-        photoId: Number,
+        photoId: String,
     },
     data() {
         return {

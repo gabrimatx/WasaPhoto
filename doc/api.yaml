@@ -364,22 +364,6 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-    delete:
-      operationId: deleteUser
-      description: Delete user if the necessary authorization is present.
-      summary: Delete a user profile.
-      tags:
-        - users
-      responses:
-        "200":
-          $ref: "#/components/responses/OK"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-
   /users/{userId}/stream/:
     parameters:
       - $ref: "#/components/parameters/userId"
