@@ -64,8 +64,7 @@ paths:
   /photos/:
     post:
       operationId: uploadPhoto
-      description: -|
-        New photo upload, multiple photos possible.
+      description: New photo upload.
       summary: Upload a new photo
       tags:
         - photos

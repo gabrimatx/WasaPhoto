@@ -58,7 +58,7 @@ export default {
 
         },
     },
-    beforeDestroy() {
+    beforeUnmount() {
             window.$(`exampleModal`).modal('dispose');
     },
 };

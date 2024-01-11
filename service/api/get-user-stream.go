@@ -46,7 +46,7 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(photoStreamJSON)
+	_, err = w.Write(photoStreamJSON)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error during json sending")
 		w.WriteHeader(http.StatusInternalServerError)

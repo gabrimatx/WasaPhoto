@@ -46,7 +46,7 @@ func (rt *_router) getUserId(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonData)
+	_, err = w.Write(jsonData)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error during json sending")
 		w.WriteHeader(http.StatusInternalServerError)

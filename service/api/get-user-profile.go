@@ -111,7 +111,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(profileJSON)
+	_, err = w.Write(profileJSON)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error during json sending")
 		w.WriteHeader(http.StatusInternalServerError)

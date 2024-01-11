@@ -17,7 +17,6 @@ type AppDatabase interface {
 	// users
 	SetUsername(UserId uint64, new_username string) error
 	InsertUser(newUsername string) (uint64, error)
-	DeleteUser(UserId uint64) error
 	GetUser(Username string) (uint64, error)
 	GetUserName(userId uint64) (string, error)
 	GetUserStream(UserId uint64) (components.PhotoStreamList, error)

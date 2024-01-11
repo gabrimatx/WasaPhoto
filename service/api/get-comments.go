@@ -62,7 +62,7 @@ func (rt *_router) getComments(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(commentStreamJSON)
+	_, err = w.Write(commentStreamJSON)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error during json sending")
 		w.WriteHeader(http.StatusInternalServerError)
