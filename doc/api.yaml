@@ -64,7 +64,7 @@ paths:
   /photos/:
     post:
       operationId: uploadPhoto
-      description: New photo upload.
+      description: New photo upload, contains the file and the caption in the additional data.
       summary: Upload a new photo
       tags:
         - photos
@@ -88,8 +88,8 @@ paths:
       - $ref: "#/components/parameters/photoId"
     get:
       operationId: getPhoto
-      description: Get photo file for frontend
-      summary: photo file
+      description: Get photo file for frontend.
+      summary: Photo file
       tags:
         - photos
       responses:
@@ -112,7 +112,7 @@ paths:
           $ref: "#/components/responses/NotFound"
     delete:
       operationId: deletePhoto
-      description: Delete photo operation that requires the id of the photo to be deleted.
+      description: Delete photo operation that requires the id of the photo to be deleted and removes the file from filesystem and entry from database.
       summary: Delete a photo that exists.
       tags:
         - photos
@@ -144,7 +144,7 @@ paths:
             application/json:
               schema:
                 type: object
-                description: JSON of like bool
+                description: Object containing the liked status.
                 properties:
                   isLiked:
                     type: boolean
@@ -193,8 +193,8 @@ paths:
 
     get:
       operationId: getComments
-      description: Get all the comments of the photo
-      summary: get the comments
+      description: Get all the comments of the photo to show them when opening the modal.
+      summary: Get the photo comments.
       tags:
         - comments
       responses:
@@ -215,8 +215,8 @@ paths:
 
     post:
       operationId: commentPhoto
-      description: Post a comment to the photo browsed.
-      summary: Add a comment to the photo.
+      description: Post a comment to the photo selected.
+      summary: Add a comment.
       tags:
         - comments
       requestBody:
@@ -240,8 +240,8 @@ paths:
 
     delete:
       operationId: uncommentPhoto
-      description: Delete a comment from the photo browsed via its unique identifier.
-      summary: Remove comment from the photo.
+      description: Delete a comment from the photo selected.
+      summary: Remove comment.
       tags:
         - comments
       responses:
@@ -256,8 +256,8 @@ paths:
   /users/:
     get:
       operationId: getUserId
-      description: Get user by username, fetch the id from the database if the user exists
-      summary: UserId by name
+      description: Get user by username, fetch the id from the database if the user exists.
+      summary: User identifier by name.
       tags:
         - users
       parameters:
@@ -269,7 +269,7 @@ paths:
             application/json:
               schema:
                 type: object
-                description: json containing the user Id
+                description: Object containing the user identifier.
                 properties:
                   userId:
                     type: integer
@@ -287,7 +287,7 @@ paths:
       - $ref: "#/components/parameters/userId"
 
     put:
-      description: Set a new username for the user if the necessary authorization is present.
+      description: Set a new username for the user you are logged in as.
       summary: Set username for a user.
       operationId: setMyUserName
       tags:
@@ -317,15 +317,16 @@ paths:
       operationId: getUserProfile
       tags:
         - users
-      description: Obtain photos published by the user selected via the parameter in the link and also other data.
-      summary: Get the photos of the user and other data.
+      description: Obtain photos published by the user selected via the parameter in the link and also other data to show.
+      summary: Get the user profile elements.
       responses:
         "200":
-          description: user profile returned successfully
+          description: User profile returned successfully.
           content:
             application/json:
               schema:
                 type: object
+                description: The object containing all necessary elements to show the user profile.
                 properties:
                   PList:
                     type: array
@@ -335,7 +336,7 @@ paths:
                     maxItems: 20
                   userName:
                     type: string
-                    description: name of the user
+                    description: Name of the user
                     example: Maria
                     pattern: ".*"
                     minLength: 3
@@ -343,19 +344,19 @@ paths:
                   followCount:
                     type: integer
                     example: 0
-                    description: number of users that follow the user
+                    description: Number of users that follow the user
                   followedCount:
                     type: integer
                     example: 0
-                    description: number of users that the user follows
+                    description: Number of users that the user follows
                   isBanned:
                     type: boolean
                     example: true
-                    description: if you banned the user
+                    description: If you banned the user
                   isFollowed:
                     type: boolean
                     example: false
-                    description: if you follow the user
+                    description: If you follow the user
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -368,14 +369,14 @@ paths:
       - $ref: "#/components/parameters/userId"
 
     get:
-      summary: Get user's feed
+      summary: Get user's feed.
       description: Retrieve the feed of the specified user.
       operationId: getMyStream
       tags:
         - users
       responses:
         "200":
-          description: Photo list returned successfully
+          description: Photo list returned successfully.
           content:
             application/json:
               schema:
@@ -512,6 +513,7 @@ components:
       schema: 
         description: Name of the user
         example: Gabriele
+        type: string
         minLength: 3
         maxLength: 16
         pattern: ".*"
@@ -652,7 +654,7 @@ components:
         caption:
           type: string
           description: caption of the photo in the list
-          example: daje
+          example: good day!
           maxLength: 1000
           minLength: 0
           pattern: ".*"
