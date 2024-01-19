@@ -585,7 +585,7 @@ components:
           type: string
           format: binary
           description: The photo file
-          example: 1010
+          example: "1010"
           minLength: 0
           maxLength: 100000000
           pattern: ".*"
