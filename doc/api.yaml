@@ -113,7 +113,7 @@ paths:
     delete:
       operationId: deletePhoto
       description: Delete photo operation that requires the id of the photo to be deleted and removes the file from filesystem and entry from database.
-      summary: Delete a photo that exists.
+      summary: Delete a photo.
       tags:
         - photos
       responses:
@@ -160,7 +160,7 @@ paths:
     put:
       operationId: likePhoto
       description: Put a like with the identifier of the user that put the like.
-      summary: Add a like to the photo.
+      summary: Add a like.
       tags:
         - likes
       responses:
@@ -174,7 +174,7 @@ paths:
     delete:
       operationId: unlikePhoto
       description: Remove like from the photo liked by the user.
-      summary: Remove like from the photo.
+      summary: Remove like.
       tags:
         - likes
       responses:
@@ -194,7 +194,7 @@ paths:
     get:
       operationId: getComments
       description: Get all the comments of the photo to show them when opening the modal.
-      summary: Get the photo comments.
+      summary: Get comments.
       tags:
         - comments
       responses:
@@ -216,7 +216,7 @@ paths:
     post:
       operationId: commentPhoto
       description: Post a comment to the photo selected.
-      summary: Add a comment.
+      summary: Add comment.
       tags:
         - comments
       requestBody:
@@ -257,7 +257,7 @@ paths:
     get:
       operationId: getUserId
       description: Get user by username, fetch the id from the database if the user exists.
-      summary: User identifier by name.
+      summary: Get identifier.
       tags:
         - users
       parameters:
@@ -510,8 +510,9 @@ components:
       in: query
       name: userName
       required: false
+      description: Username of the user
       schema: 
-        description: Name of the user
+        description: Object containing username of the user in the query.
         example: Gabriele
         type: string
         minLength: 3
@@ -521,6 +522,7 @@ components:
       in: path
       name: photoId
       required: true
+      description: Photo identifier in the path.
       schema:
         description: Id of the photo.
         type: integer
@@ -528,6 +530,7 @@ components:
       in: path
       name: userId
       required: true
+      description: Id of the user in the path.
       schema:
         description: Id of the user.
         type: integer
@@ -535,6 +538,7 @@ components:
       in: path
       name: followId
       required: true
+      description: User identifier for follower in the path.
       schema:
         description: Id of the user at the end of the follow relation.
         type: integer
@@ -542,6 +546,7 @@ components:
       in: path
       name: banId
       required: true
+      description: User identifier for banned user.
       schema:
         description: Id of the user at the end of the ban relation.
         type: integer
@@ -549,6 +554,7 @@ components:
       in: path
       name: commentId
       required: true
+      description: Comment identifier in the path.
       schema:
         description: Id of the comment on the photo.
         type: integer
@@ -567,7 +573,6 @@ components:
           description: Code of the response.
           minLength: 0
           maxLength: 4
-          example: "404"
           pattern: ".*"
         message:
           type: string
@@ -585,7 +590,6 @@ components:
           type: string
           format: binary
           description: The photo file
-          example: "1010"
           minLength: 0
           maxLength: 100000000
           pattern: ".*"
