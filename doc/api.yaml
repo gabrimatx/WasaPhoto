@@ -36,14 +36,16 @@ paths:
         If the user exists, the user identifier is returned.
       operationId: doLogin
       requestBody:
-        description: User details
+        description: |-
+          User details for login, composed
+          only by the string representing the username.
         content:
           application/json:
             schema:
               type: string
               example: Maria
               pattern: ".*"
-              description: Username of the user
+              description: Username of the user trying to login.
               minLength: 3
               maxLength: 16
         required: true
@@ -57,20 +59,28 @@ paths:
                 description: Object containing user identifier.
                 properties:
                   identifier:
-                    description: User unique identifier.
+                    description: |-
+                      User unique identifier, 
+                      integer utilization that corresponds 
+                      as the one on the path.
                     type: integer
                     example: 1
 
   /photos/:
     post:
       operationId: uploadPhoto
-      description: New photo upload, contains the file and the caption in the additional data.
-      summary: Upload a new photo
+      description: |-
+        New photo upload, contains the file 
+        and the caption in the additional data.
+      summary: Upload a photo
       tags:
         - photos
       requestBody:
         required: true
-        description: Request body for the photo
+        description: |-
+          Request body for the photo, containing
+          a form with the photo file and other information 
+          for storing.
         content:
           multipart/form-data:
             schema:
@@ -88,19 +98,21 @@ paths:
       - $ref: "#/components/parameters/photoId"
     get:
       operationId: getPhoto
-      description: Get photo file for frontend.
+      description: |-
+        Get photo file for showing it on the frontend from. 
+        Photo is obtained from the filesystem.
       summary: Photo file
       tags:
         - photos
       responses:
         "200":
-          description: Photo returned successfully
+          description: Photo returned successfully.
           content:
             img/jpg:
               schema:
                 type: string
                 format: binary
-                description: the photo file
+                description: The photo file from the filesystem.
                 pattern: ".*"
                 minLength: 1
                 maxLength: 100000000000000
@@ -112,8 +124,11 @@ paths:
           $ref: "#/components/responses/NotFound"
     delete:
       operationId: deletePhoto
-      description: Delete photo operation that requires the id of the photo to be deleted and removes the file from filesystem and entry from database.
-      summary: Delete a photo.
+      description: |-
+        Delete photo operation that requires the id
+        of the photo to be deleted and removes the file
+        from filesystem and the entry from database.
+      summary: Delete a photo
       tags:
         - photos
       responses:
@@ -133,22 +148,22 @@ paths:
     
     get:
       operationId: getLike
-      description: Get if the photo is liked by the user
-      summary: bool isLiked
+      description: Get if the photo is liked by the user.
+      summary: Get like presence
       tags:
         - likes
       responses:
         "200":
-          description: Like bool returned successfully
+          description: Like presence value returned successfully.
           content:
             application/json:
               schema:
                 type: object
-                description: Object containing the liked status.
+                description: Object containing the like status.
                 properties:
                   isLiked:
                     type: boolean
-                    description: the bool
+                    description: Value determining if the like is present.
                     example: true    
         "401":
           $ref: "#/components/responses/Unauthorized"
@@ -160,7 +175,7 @@ paths:
     put:
       operationId: likePhoto
       description: Put a like with the identifier of the user that put the like.
-      summary: Add a like.
+      summary: Add a like
       tags:
         - likes
       responses:
@@ -174,7 +189,7 @@ paths:
     delete:
       operationId: unlikePhoto
       description: Remove like from the photo liked by the user.
-      summary: Remove like.
+      summary: Remove like
       tags:
         - likes
       responses:
@@ -193,8 +208,10 @@ paths:
 
     get:
       operationId: getComments
-      description: Get all the comments of the photo to show them when opening the modal.
-      summary: Get comments.
+      description: |- 
+        Get all the comments of the 
+        photo to show them when opening the modal.
+      summary: Get comments
       tags:
         - comments
       responses:
@@ -215,8 +232,8 @@ paths:
 
     post:
       operationId: commentPhoto
-      description: Post a comment to the photo selected.
-      summary: Add comment.
+      description: Write a comment to add to the photo selected.
+      summary: Add comment
       tags:
         - comments
       requestBody:
@@ -240,8 +257,10 @@ paths:
 
     delete:
       operationId: uncommentPhoto
-      description: Delete a comment from the photo selected.
-      summary: Remove comment.
+      description: |-
+        Delete a comment from the
+        photo selected that you have posted.
+      summary: Remove comment
       tags:
         - comments
       responses:
@@ -256,15 +275,18 @@ paths:
   /users/:
     get:
       operationId: getUserId
-      description: Get user by username, fetch the id from the database if the user exists.
-      summary: Get identifier.
+      description: |-
+        Get user by username, 
+        fetch the id from the database 
+        if the user exists.
+      summary: Get identifier
       tags:
         - users
       parameters:
         - $ref: "#/components/parameters/userName"
       responses:
         "200":
-          description: User id found and returned
+          description: User id found and returned.
           content:
             application/json:
               schema:
@@ -274,7 +296,7 @@ paths:
                   userId:
                     type: integer
                     example: 1
-                    description: Id of the user
+                    description: Id of the user.
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -288,7 +310,7 @@ paths:
 
     put:
       description: Set a new username for the user you are logged in as.
-      summary: Set username for a user.
+      summary: Set new username
       operationId: setMyUserName
       tags:
         - users
@@ -317,8 +339,10 @@ paths:
       operationId: getUserProfile
       tags:
         - users
-      description: Obtain photos published by the user selected via the parameter in the link and also other data to show.
-      summary: Get the user profile elements.
+      description: |-
+        Obtain photos published by the user selected via
+        the parameter in the link and also other data to show.
+      summary: Get the user profile
       responses:
         "200":
           description: User profile returned successfully.
@@ -330,13 +354,13 @@ paths:
                 properties:
                   PList:
                     type: array
-                    description: The ids of the photos in the array
+                    description: The ids of the photos in the array.
                     items: { $ref: "#/components/schemas/PhotoListElement" }
                     minItems: 0
                     maxItems: 20
                   userName:
                     type: string
-                    description: Name of the user
+                    description: Name of the user.
                     example: Maria
                     pattern: ".*"
                     minLength: 3
@@ -344,19 +368,19 @@ paths:
                   followCount:
                     type: integer
                     example: 0
-                    description: Number of users that follow the user
+                    description: Number of users that follow the user.
                   followedCount:
                     type: integer
                     example: 0
-                    description: Number of users that the user follows
+                    description: Number of users that the user follows.
                   isBanned:
                     type: boolean
                     example: true
-                    description: If you banned the user
+                    description: If you banned the user.
                   isFollowed:
                     type: boolean
                     example: false
-                    description: If you follow the user
+                    description: If you follow the user.
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -369,7 +393,7 @@ paths:
       - $ref: "#/components/parameters/userId"
 
     get:
-      summary: Get user's feed.
+      summary: Get user's feed
       description: Retrieve the feed of the specified user.
       operationId: getMyStream
       tags:
@@ -381,7 +405,7 @@ paths:
             application/json:
               schema:
                 type: array
-                description: The photo infos in the array
+                description: Array contain information to show for each photo.
                 items: { $ref: "#/components/schemas/PhotoStreamListElement" }
                 minItems: 0
                 maxItems: 20
@@ -398,8 +422,10 @@ paths:
       - $ref: "#/components/parameters/followId"
 
     put:
-      description: Put a follow with the id of the user followed in the follows of the user.
-      summary: Follow a user.
+      description: |-
+        Put a follow with the id of the user
+        followed in the follows of the user.
+      summary: Follow a user
       operationId: followUser
       tags:
         - follows
@@ -414,8 +440,8 @@ paths:
           $ref: "#/components/responses/NotFound"
 
     delete:
-      description: Delete the follow from the follows of the user selected.
-      summary: Unfollow a user.
+      description: Stop following the selected user.
+      summary: Unfollow a user
       operationId: unfollowUser
       tags:
         - follows
@@ -435,8 +461,10 @@ paths:
       - $ref: "#/components/parameters/banId"
 
     put:
-      description: Put a ban with the id of the user banned in the list of the bans.
-      summary: Ban a user.
+      description: |-
+        Ban the user you are currently viewing,
+        stop showing your content and profile to him.
+      summary: Ban a user
       operationId: banUser
       tags:
         - bans
@@ -451,8 +479,8 @@ paths:
           $ref: "#/components/responses/NotFound"
 
     delete:
-      description: Delete the ban via user id from the ban list of the user.
-      summary: Unban a user.
+      description: Stop the ban relation with the user you are currently viewing.
+      summary: Unban a user
       operationId: unbanUser
       tags:
         - bans
@@ -475,31 +503,31 @@ components:
           schema:
             $ref: "#/components/schemas/ResponseMessage"
     Created:
-      description: Created
+      description: Created response.
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ResponseMessage"
     NotFound:
-      description: Not Found
+      description: Not Found response.
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ResponseMessage"
     Unauthorized:
-      description: Access token missing
+      description: Access token missing or not valid response.
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ResponseMessage"
     Forbidden:
-      description: Forbidden
+      description: Forbidden response.
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ResponseMessage"
     BadRequest:
-      description: Bad Request
+      description: Bad Request response.
       content:
         application/json:
           schema:
@@ -510,9 +538,9 @@ components:
       in: query
       name: userName
       required: false
-      description: Username of the user
+      description: Username of the user, a classic string.
       schema: 
-        description: Object containing username of the user in the query.
+        description: String representing the username.
         example: Gabriele
         type: string
         minLength: 3
@@ -524,15 +552,15 @@ components:
       required: true
       description: Photo identifier in the path.
       schema:
-        description: Id of the photo.
+        description: Integer for the identifier of the photo.
         type: integer
     userId:
       in: path
       name: userId
       required: true
-      description: Id of the user in the path.
+      description: Identifier of the user in the path.
       schema:
-        description: Id of the user.
+        description: Integer representing the identifier of the user.
         type: integer
     followId:
       in: path
@@ -566,7 +594,10 @@ components:
   schemas:
     ResponseMessage:
       type: object
-      description: General response
+      description: |-
+        General response message, 
+        returned by a response
+        after endpoint running.
       properties:
         code:
           type: string
@@ -589,13 +620,13 @@ components:
         file:
           type: string
           format: binary
-          description: The photo file
+          description: The photo file.
           minLength: 0
           maxLength: 100000000
           pattern: ".*"
         additionalData:
           type: object
-          description: additional information
+          description: Additional information to store the photo.
           properties:
             Caption:
               description: Photo Caption written by the user.
@@ -606,25 +637,27 @@ components:
               maxLength: 100
     PhotoListElement:
       title: PhotoListElement
-      description: This object is a component of the photo list returned
+      description: |-
+        This object is a component of the photo list
+        returned to represent a photo in the user profile.
       type: object
       properties:
         id:
           type: integer
           example: 1
-          description: id of the photo
+          description: Identifier of the photo.
         likeCount:
           type: integer
           example: 0
-          description: amount of likes
+          description: Amount of likes of the photo.
         publisherId:
           type: integer
           example: 2
-          description: id of the user that published the photo
+          description: Identifier of the user that published the photo.
         caption:
           type: string
-          description: caption of the photo in the list
-          example: daje
+          description: Caption of the photo.
+          example: Good day today!
           maxLength: 1000
           minLength: 0
           pattern: ".*"
@@ -634,30 +667,32 @@ components:
           example: "2017-07-21T17:32:28Z"
           minLength: 20
           maxLength: 20
-          description: date of the photo release
+          description: Date of the photo upload.
     PhotoStreamListElement:
       title: PhotoListElement
-      description: This object is a component of the photo list returned
+      description: |-
+        This object is a component of the photo
+        list returned when viewing you stream.
       type: object
       properties:
         id:
           type: integer
           example: 1
-          description: id of the photo
+          description: Identifier of the photo.
         likeCount:
           type: integer
           example: 0
-          description: amount of likes
+          description: Amount of likes.
         publisherName:
           type: string
           example: gabrimat
-          description: id of the user that published the photo
+          description: Name of the user that published the photo.
           minLength: 3
           maxLength: 16
           pattern: ".*"
         caption:
           type: string
-          description: caption of the photo in the list
+          description: Caption of the photo in the stream.
           example: good day!
           maxLength: 1000
           minLength: 0
@@ -668,7 +703,7 @@ components:
           example: "2017-07-21T17:32:28Z"
           minLength: 20
           maxLength: 20
-          description: date of the photo release
+          description: Date of the photo release.
     Comment:
       title: Comment
       description: Comment of a published photo.
@@ -682,24 +717,24 @@ components:
           maxLength: 1000
           pattern: ".*"
     CommentListElement:
-      description: element of the comment list
+      description: Element of the comment list.
       title: CommentListElement
       type: object
       properties:
         id:
-          description: identifier of the comment
+          description: Identifier of the comment.
           type: integer
           example: 1
         photoId:
-          description: identifier of the photo which the comment belongs to
+          description: Identifier of the photo which the comment belongs to.
           example: 1
           type: integer
         publisherId:
-          description: id of the user that published the comment
+          description: Identifier of the user that published the comment.
           example : 1
           type: integer
         publisherName:
-          description: name of the user that published the comment
+          description: Name of the user that published the comment.
           type: string
           example: Maria
           minLength: 3

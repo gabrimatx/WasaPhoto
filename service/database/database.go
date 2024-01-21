@@ -74,7 +74,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 					Caption TEXT,
 					PublisherId INTEGER,
 					Likes INTEGER,
-					FOREIGN KEY (PublisherId) REFERENCES Users(Id)
+					FOREIGN KEY (PublisherId) REFERENCES Users(Id) ON DELETE CASCADE
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -103,8 +103,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 					PhotoId INTEGER,
 					UserId INTEGER,
 					Text_Comment TEXT,
-					FOREIGN KEY (UserId) REFERENCES Users(Id),
-					FOREIGN KEY (PhotoId) REFERENCES Photos(Id)
+					FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
+					FOREIGN KEY (PhotoId) REFERENCES Photos(Id) ON DELETE CASCADE
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -119,8 +119,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 					PhotoId INTEGER,
 					UserId INTEGER,
 					PRIMARY KEY (PhotoId, UserId),
-					FOREIGN KEY (UserId) REFERENCES Users(Id),
-					FOREIGN KEY (PhotoId) REFERENCES Photos(Id)
+					FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
+					FOREIGN KEY (PhotoId) REFERENCES Photos(Id) ON DELETE CASCADE
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -135,8 +135,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 					FollowerId INTEGER,
 					FollowedId INTEGER,
 					PRIMARY KEY (FollowerId, FollowedId),
-					FOREIGN KEY (FollowerId) REFERENCES Users(Id),
-					FOREIGN KEY (FollowedId) REFERENCES Users(Id)
+					FOREIGN KEY (FollowerId) REFERENCES Users(Id) ON DELETE CASCADE,
+					FOREIGN KEY (FollowedId) REFERENCES Users(Id) ON DELETE CASCADE
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -151,8 +151,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 					BannerId INTEGER,
 					BannedId INTEGER,
 					PRIMARY KEY (BannerId, BannedId),
-					FOREIGN KEY (BannerId) REFERENCES Users(Id),
-					FOREIGN KEY (BannedId) REFERENCES Users(Id)
+					FOREIGN KEY (BannerId) REFERENCES Users(Id) ON DELETE CASCADE,
+					FOREIGN KEY (BannedId) REFERENCES Users(Id) ON DELETE CASCADE
 		); `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
