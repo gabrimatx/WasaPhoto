@@ -29,13 +29,18 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	var username string
-	err = json.NewDecoder(r.Body).Decode(&username)
-	if err != nil {
-		ctx.Logger.WithField("new username", username).Error("invalid json encoding")
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	var requestData struct {
+		Username string `json:"username"`
 	}
+
+	err = json.NewDecoder(r.Body).Decode(&requestData)
+	if err != nil {
+	    ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't get new name for the user")
+	    w.WriteHeader(http.StatusBadRequest)
+	    return
+	}
+
+	username := requestData.Username
 
 	err = rt.db.SetUsername(id, username)
 	if err != nil {

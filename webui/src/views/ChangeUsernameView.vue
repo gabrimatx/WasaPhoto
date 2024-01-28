@@ -38,7 +38,7 @@ export default {
                         'Authorization': `Bearer ${token}`,
                     },
                 };
-                const response = await this.$axios.put(`/users/${token}`, this.newname, config);
+                const response = await this.$axios.put(`/users/${token}`, { username: this.newname }, config);
                 console.log("Name changed");
                 this.changedSuccess = true;
                 this.errore = false;

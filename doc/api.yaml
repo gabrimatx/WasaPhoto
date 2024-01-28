@@ -239,11 +239,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: The comments of the photo
-                items: { $ref: "#/components/schemas/CommentListElement" }
-                minItems: 0
-                maxItems: 50
+                type: object
+                description: Object containing the comment list.
+                properties:
+                  CList:
+                    type: array
+                    description: The comments of the photo
+                    items: { $ref: "#/components/schemas/CommentListElement" }
+                    minItems: 0
+                    maxItems: 50
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
@@ -345,12 +349,16 @@ paths:
         content:
           application/json:
             schema:
-              type: string
-              description: New name for the user.
-              minLength: 0
-              maxLength: 100
-              example: gabrimat
-              pattern: ".*"
+              type: object
+              description: Object containing new username
+              properties:
+                username:
+                  type: string
+                  description: New name for the user.
+                  minLength: 0
+                  maxLength: 100
+                  example: gabrimat
+                  pattern: ".*"
       responses:
         "201":
           $ref: "#/components/responses/Created"
