@@ -21,6 +21,7 @@ type AppDatabase interface {
 	GetUserName(userId uint64) (string, error)
 	GetUserStream(UserId uint64) (components.PhotoStreamList, error)
 	GetProfilePhotos(UserId uint64) (components.PhotoList, error)
+	GetUserSearch(Username string) (components.UserSearchList, error)
 
 	// comments
 	AddComment(Commnt components.Comment) error

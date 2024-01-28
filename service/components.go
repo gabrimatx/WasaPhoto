@@ -4,6 +4,15 @@ type User struct {
 	Name string
 }
 
+type UserSearchElement struct {
+	Id       uint64 `json:"id"`
+	Username string `json:"username"`
+}
+
+type UserSearchList struct {
+	UList []UserSearchElement
+}
+
 type Photo struct {
 	Caption string
 }

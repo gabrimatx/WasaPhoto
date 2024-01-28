@@ -304,12 +304,12 @@ paths:
 
   /users/:
     get:
-      operationId: getUserId
+      operationId: searchUser
       description: |-
-        Get user by username, 
-        fetch the id from the database 
-        if the user exists.
-      summary: Get identifier
+        Get lists of possible users
+        that have username similar 
+        to the one you are searching.
+      summary: Get users listed
       tags:
         - users
       parameters:
@@ -323,10 +323,12 @@ paths:
                 type: object
                 description: Object containing the user identifier.
                 properties:
-                  userId:
-                    type: integer
-                    example: 1
-                    description: Id of the user.
+                  UList:
+                    type: array
+                    description: The users that matched the search.
+                    items: { $ref: "#/components/schemas/User" }
+                    minItems: 0
+                    maxItems: 20
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -691,6 +693,22 @@ components:
       description: |-
         Response
         after endpoint running.
+    User:
+      title: User
+      description: This object represent a user, comprised of Id and username.
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Identifier of the user. 
+        username:
+          type: string
+          description: Name of the user registered in the system.
+          minLength: 3
+          maxLength: 20
+          pattern: ".*"
+          example: "Gabriele"
     Photo:
       title: Photo
       description: This object represents a photo in the system.
