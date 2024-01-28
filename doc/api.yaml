@@ -194,8 +194,8 @@ paths:
       tags:
         - likes
       responses:
-        "201":
-          $ref: "#/components/responses/Created"
+        "200":
+          $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
@@ -360,8 +360,8 @@ paths:
                   example: gabrimat
                   pattern: ".*"
       responses:
-        "201":
-          $ref: "#/components/responses/Created"
+        "200":
+          $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -442,11 +442,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: Array contain information to show for each photo.
-                items: { $ref: "#/components/schemas/PhotoStreamListElement" }
-                minItems: 0
-                maxItems: 20
+                type: object
+                description: Object containing elements of the feed.
+                properties:
+                  PList:
+                    type: array
+                    description: Array contain information to show for each photo.
+                    items: { $ref: "#/components/schemas/PhotoStreamListElement" }
+                    minItems: 0
+                    maxItems: 20
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -513,8 +517,8 @@ paths:
       tags:
         - bans
       responses:
-        "201":
-          $ref: "#/components/responses/Created"
+        "200":
+          $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -561,31 +565,51 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "NOT_FOUND"
+              message: "Element not found."
     Unauthorized:
       description: Access token missing or not valid response.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "UNAUTHORIZED"
+              message: "Authorization token invalid or not present."
     Forbidden:
       description: Forbidden response.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "FORBIDDEN"
+              message: "Wrong authorization for the operation."
     BadRequest:
       description: Bad Request response.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "BAD_REQUEST"
+              message: "Bad request formatting."
     InternalServerError:
       description: Internal server error response.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "INTERNAL_SERVER_ERROR"
+              message: "An internal server error occurred."
 
   parameters:
     userName:
@@ -646,18 +670,27 @@ components:
       scheme: bearer
       bearerFormat: integer
   schemas:
+    Error:
+      type: object
+      description: Error response made of error code and message.
+      properties:
+        code:
+          type: string
+          description: Code of the error.
+          minLength: 0
+          maxLength: 4
+          pattern: ".*"
+        message:
+          type: string
+          description: Message of the error.
+          minLength: 0
+          maxLength: 50
+          pattern: ".*"
     ResponseMessage:
       type: object
       description: |-
         Response
         after endpoint running.
-      properties:
-        code:
-          type: string
-          description: Code of the response.
-          minLength: 0
-          maxLength: 4
-          pattern: ".*"
     Photo:
       title: Photo
       description: This object represents a photo in the system.
