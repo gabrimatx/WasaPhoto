@@ -42,12 +42,16 @@ paths:
         content:
           application/json:
             schema:
-              type: string
-              example: Maria
-              pattern: ".*"
-              description: Username of the user trying to login.
-              minLength: 3
-              maxLength: 16
+              type: object
+              description: Object containing username string.
+              properties:
+                username:
+                  type: string
+                  example: "Maria"
+                  pattern: ".*"
+                  description: Username of the user trying to login.
+                  minLength: 3
+                  maxLength: 16
         required: true
       responses:
         "201":
@@ -65,6 +69,8 @@ paths:
                       as the one on the path.
                     type: integer
                     example: 1
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/:
     post:
@@ -92,6 +98,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}:
     parameters:
@@ -122,6 +130,9 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
     delete:
       operationId: deletePhoto
       description: |-
@@ -140,6 +151,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}/likes/{userId}:
     parameters:
@@ -171,6 +184,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     put:
       operationId: likePhoto
@@ -185,6 +200,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     delete:
       operationId: unlikePhoto
@@ -201,6 +218,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}/comments/:
     parameters:
@@ -229,6 +248,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     post:
       operationId: commentPhoto
@@ -249,6 +270,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}/comments/{commentId}:
     parameters:
@@ -272,6 +295,9 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /users/:
     get:
       operationId: getUserId
@@ -301,8 +327,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-
-      
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}:
     parameters:
@@ -334,6 +360,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     get:
       operationId: getUserProfile
@@ -387,6 +415,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}/stream/:
     parameters:
@@ -415,6 +445,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}/follows/{followId}:
     parameters:
@@ -438,6 +470,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     delete:
       description: Stop following the selected user.
@@ -454,6 +488,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}/bans/{banId}:
     parameters:
@@ -477,6 +513,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     delete:
       description: Stop the ban relation with the user you are currently viewing.
@@ -493,6 +531,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   responses:
@@ -528,6 +568,12 @@ components:
             $ref: "#/components/schemas/ResponseMessage"
     BadRequest:
       description: Bad Request response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseMessage"
+    InternalServerError:
+      description: Internal server error response.
       content:
         application/json:
           schema:
@@ -595,8 +641,7 @@ components:
     ResponseMessage:
       type: object
       description: |-
-        General response message, 
-        returned by a response
+        Response
         after endpoint running.
       properties:
         code:
@@ -604,13 +649,6 @@ components:
           description: Code of the response.
           minLength: 0
           maxLength: 4
-          pattern: ".*"
-        message:
-          type: string
-          description: Message of the response.
-          minLength: 0
-          maxLength: 1000
-          example: "Error element not found"
           pattern: ".*"
     Photo:
       title: Photo

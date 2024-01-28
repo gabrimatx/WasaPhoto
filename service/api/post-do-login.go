@@ -9,18 +9,23 @@ import (
 )
 
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	var username string
-	err := json.NewDecoder(r.Body).Decode(&username)
-	if err != nil {
-		ctx.Logger.WithError(err).WithField("username", username).Error("Can't login user")
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	var requestData struct {
+		Username string `json:"username"`
 	}
+
+	err := json.NewDecoder(r.Body).Decode(&requestData)
+	if err != nil {
+	    ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't login user")
+	    w.WriteHeader(http.StatusBadRequest)
+	    return
+	}
+
+	username := requestData.Username
 
 	userID, err := rt.db.GetUser(username)
 	if err != nil {
 		ctx.Logger.WithError(err).WithField("username", username).Error("Can't operate database")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
