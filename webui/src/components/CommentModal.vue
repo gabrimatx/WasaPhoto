@@ -55,11 +55,7 @@ export default {
                 console.error(error.response.data);
                 this.Text = "Error posting comment :(";
             }
-
         },
-    },
-    beforeUnmount() {
-            window.$(`exampleModal`).modal('dispose');
     },
 };
 </script>

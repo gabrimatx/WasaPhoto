@@ -1,15 +1,13 @@
 <template>
     <div class="container mt-5">
-        <div class="user-info">
+        <div class="row">
             <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
-            <div v-if="found">
-                <div>Followers: {{ followCount }}</div>
-                <div>Followed: {{ followedCount }}</div>
+            <div v-if="found" style="font-size: 20px;">
+                <div class="row">Followers: {{ followCount }}</div>
+                <div class="row">Followed: {{ followedCount }}</div>
 
 
                 <div v-if="!isItMe">
-                    <div class="user-info">Banned: {{ isBanned ? 'Yes' : 'No' }}</div>
-                    <div class="user-info">Followed: {{ isFollowed ? 'Yes' : 'No' }}</div>
                     <div class="btn-group mt-3">
                         <button @click="toggleFollow" class="btn btn-warning">
                             {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather">
@@ -24,8 +22,8 @@
                     </div>
                 </div>
             </div>
-            <hr />
         </div>
+        <hr />
         <div class="photos">
             <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="userName"
                 :likeCount="photo.likecount" :caption="photo.caption" />
@@ -193,7 +191,6 @@ hr {
 }
 
 .photos .photo-card {
-    width: 200px;
     margin-bottom: 30px;
 }
 </style>
