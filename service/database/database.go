@@ -13,6 +13,8 @@ type AppDatabase interface {
 	// photos
 	UploadPhoto(photo components.Photo, PublisherId uint64) (uint64, error)
 	DeletePhoto(id uint64) error
+	GetNumberOfPhotos(UserId uint64) (int, error)
+	PhotoCascadeDeletion(photoId uint64) error
 
 	// users
 	SetUsername(UserId uint64, new_username string) error

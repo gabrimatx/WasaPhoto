@@ -57,4 +57,12 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	// cascade deletion of comments and likes
+	err = rt.db.PhotoCascadeDeletion(id)
+	if err != nil {
+		ctx.Logger.WithError(err).WithField("id", id).Error("Can't delete photo's comments and likes")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
