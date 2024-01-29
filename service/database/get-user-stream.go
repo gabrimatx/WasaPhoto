@@ -13,11 +13,16 @@ func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoStreamList, e
 		WHERE PublisherId IN (
 			SELECT FollowedId
 			FROM Follows 
-			WHERE FollowerId = ?
+			WHERE FollowerId = ? 
+		)
+		AND PublisherId NOT IN (
+			SELECT BannerId 
+			FROM Bans
+			WHERE BannedId = ?
 		)
 		ORDER BY ReleaseDate
 		LIMIT 20
-		`, UserId)
+		`, UserId, UserId)
 	if err != nil {
 		return ToReturn, err
 	}

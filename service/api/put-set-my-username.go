@@ -36,11 +36,25 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	err = json.NewDecoder(r.Body).Decode(&requestData)
 	if err != nil {
 	    ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't get new name for the user")
-	    w.WriteHeader(http.StatusBadRequest)
+	    w.WriteHeader(http.StatusInternalServerError)
 	    return
 	}
 
 	username := requestData.Username
+
+	userID, err := rt.db.GetUser(username)
+	if err != nil {
+		ctx.Logger.WithError(err).WithField("username", username).Error("Can't operate database")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if userID != 0 {
+		ctx.Logger.WithError(err).WithField("username", username).Error("Username already in use.")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 
 	err = rt.db.SetUsername(id, username)
 	if err != nil {
