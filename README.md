@@ -7,13 +7,13 @@ Web Application for sharing photos and interact with other users.
 ### Backend
 
 ```sh
-$ docker build -t wasa-photo-backend:latest -f Dockerfile.backend .
+docker build -t wasa-photo-backend:latest -f Dockerfile.backend .
 ```
 
 ### Frontend
 
 ```sh
-$ docker build -t wasa-photo-frontend:latest -f Dockerfile.frontend .
+docker build -t wasa-photo-frontend:latest -f Dockerfile.frontend .
 ```
 
 ## How to run container images
@@ -21,13 +21,13 @@ $ docker build -t wasa-photo-frontend:latest -f Dockerfile.frontend .
 ### Backend
 
 ```sh
-$ docker run -it --rm -p 3000:3000 wasa-photo-backend:latest
+docker run -it --rm -p 3000:3000 wasa-photo-backend:latest
 ```
 
 ### Frontend
 
-```
-$ docker run -it --rm -p 8080:80 wasa-photo-frontend:latest
+```sh
+docker run -it --rm -p 8080:80 wasa-photo-frontend:latest
 ```
 
 ## How to build for development

@@ -2,11 +2,13 @@
   <div class="container mt-5">
     <h2 class="display-4 mb-4">Upload Photo</h2>
     <form @submit.prevent="uploadPhoto" class="needs-validation" novalidate style="font-size: 17px;">
-      <div class="row" style="margin: 10px;">
-        <label for="photo">Select Photo:</label>
-        <input type="file" class="form-control-file" id="photo" @change="onFileChange" required />
-        <div class="invalid-feedback" v-if="!photo">Photo is required</div>
+      <div class="container mt-3">
+        <div class="input-group">
+          <input type="file" class="form-control-file" id="photo" @change="onFileChange" required />
+          <div class="invalid-feedback" v-if="!photo">Photo is required</div>
+        </div>
       </div>
+
 
       <div class="row" style="margin: 10px;">
         <label for="caption">Caption:</label>

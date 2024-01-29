@@ -2,7 +2,7 @@
   <div class="container mt-5" v-if="notBanned">
     <div class="center-container">
       <div class="card photo-card">
-        <button v-if="isMe" @click="deletePhoto" class="btn btn-danger delete-button">
+        <button v-if="isMe" @click="deletePhoto" class="btn btn-danger delete-button mb-2">
           Delete Photo <svg class="feather">
             <use href="/feather-sprite-v4.29.0.svg#trash-2" />
           </svg>
@@ -10,14 +10,10 @@
 
         <img :src="imgSrc" alt="Photo" class="card-img-top" />
         <div class="card-body photo-details">
-          <div class="author">Author: {{ authorName }}, {{ date }}</div>
-          <div class="caption">
-            <div class="caption-border"></div>
-            <div class="caption-text">{{ caption }}</div>
-            <div class="caption-border"></div>
-          </div>
+          <div class="author">{{ authorName }}, {{ date }}</div>
+          <div class="card-text text-center bg-light fs-5">{{ caption }}</div>
           <div class="actions">
-            <button @click="likePhoto" class="btn btn-sm btn-outline-primary">
+            <button @click="likePhoto" class="btn btn-sm btn-outline-primary ms-3">
               {{ isLiked ? 'Unlike' : 'Like' }}
             </button>
             <span class="like-counter">{{ LikeCount }} Likes <svg class="feather">
@@ -185,7 +181,7 @@ export default {
   border: 3px solid #6d6969;
   border-radius: 4px;
   padding: 10px;
-  width: 450px;
+  width: 500px;
   text-align: center;
   font-family: 'Arial', sans-serif;
 }
@@ -195,7 +191,6 @@ export default {
 }
 
 .author {
-  font-weight: bold;
   font-size: 20px;
   margin-bottom: 5px;
 }

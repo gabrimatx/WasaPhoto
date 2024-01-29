@@ -1,15 +1,10 @@
 <template>
-    <div class="container mt-5">
-        <div class="row">
-            <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
-            <div v-if="found" style="font-size: 20px;">
-                <div class="row">Followers: {{ followCount }}</div>
-                <div class="row">Followed: {{ followedCount }}</div>
-                <div class="row">Photos: {{ photoCount }}</div>
-
-
+    <div class="container mt-5" v-if="found">
+        <div>
+            <div>
+                <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
                 <div v-if="!isItMe">
-                    <div class="btn-group mt-3">
+                    <div class="btn-group mt-1">
                         <button @click="toggleFollow" class="btn btn-warning">
                             {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather">
                                 <use href="/feather-sprite-v4.29.0.svg#user-plus" />
@@ -23,11 +18,19 @@
                     </div>
                 </div>
             </div>
+            <div style="font-size: 20px;" class="container mt-2">
+                <div class="row bg-light p-4 shadow-lg">
+                    <div class="row">Followers: {{ followCount }}</div>
+                    <div class="row">Followed: {{ followedCount }}</div>
+                    <div class="row">Photos: {{ photoCount }}</div>
+                </div>
+            </div>
+
         </div>
         <hr />
         <div class="photos">
-            <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :date="photo.date" :authorName="userName"
-                :likeCount="photo.likecount" :caption="photo.caption"/>
+            <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :date="photo.date"
+                :authorName="userName" :likeCount="photo.likecount" :caption="photo.caption" />
         </div>
     </div>
 </template>
