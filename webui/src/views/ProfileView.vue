@@ -1,8 +1,8 @@
 <template>
-    <div class="container mt-5" v-if="found">
-        <div>
+    <div class="container mt-5">
+        <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
+        <div v-if="found">
             <div>
-                <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
                 <div v-if="!isItMe">
                     <div class="btn-group mt-1">
                         <button @click="toggleFollow" class="btn btn-warning">
