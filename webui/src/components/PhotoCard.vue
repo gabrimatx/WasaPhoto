@@ -123,20 +123,14 @@ export default {
   methods: {
     async findAuthorId() {
       try {
-        const response = await this.$axios.get(`/users/`, {
-          params: { userName: this.authorName },
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-          },
-        });
-        this.authorId = response.data.userId;
-        if (this.authorId == token) {
+        const userId = this.$route.params.userId;   
+        const hasStreamSegment = this.$route.path.includes('/stream');        
+        if (userId == token && !hasStreamSegment) {
           this.isMe = true;
         };
       }
       catch (error) {
-        console.error(error, "niente")
+        console.error(error, "Error searching photo owner.")
       }
     },
     async deletePhoto() {
