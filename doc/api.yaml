@@ -411,6 +411,10 @@ paths:
                     type: integer
                     example: 0
                     description: Number of users that the user follows.
+                  photoCount:
+                    type: integer
+                    example: 0
+                    description: Number of photos posted by the user.
                   isBanned:
                     type: boolean
                     example: true

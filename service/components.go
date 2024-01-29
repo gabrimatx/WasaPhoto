@@ -40,6 +40,7 @@ type Response struct {
 	UserName      string `json:"userName"`
 	FollowCount   int    `json:"followCount"`
 	FollowedCount int    `json:"followedCount"`
+	PhotoCount    int    `json:"photoCount"`
 	IsFollowed    bool   `json:"isFollowed"`
 	IsBanned      bool   `json:"isBanned"`
 }

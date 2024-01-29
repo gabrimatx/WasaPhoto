@@ -94,11 +94,20 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	var photoCount int
+	photoCount, err = rt.db.GetNumberOfPhotos(id)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error during photo count getting")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	response := components.Response{
 		PhotoList:     photoStream,
 		UserName:      userName,
 		FollowCount:   followCount,
 		FollowedCount: followingCount,
+		PhotoCount:    photoCount,
 		IsBanned:      isBanned,
 		IsFollowed:    isFollowed,
 	}
