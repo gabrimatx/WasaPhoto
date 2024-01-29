@@ -73,7 +73,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Photos (
 					Id INTEGER PRIMARY KEY AUTOINCREMENT,
-					ReleaseDate VARCHAR(10),
+					ReleaseDate DATETIME,
 					Caption TEXT,
 					PublisherId INTEGER,
 					Likes INTEGER,

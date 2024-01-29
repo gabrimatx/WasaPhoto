@@ -11,7 +11,7 @@ func (db *appdbimpl) GetProfilePhotos(UserId uint64) (components.PhotoList, erro
 		SELECT * 
 		FROM Photos 
 		WHERE PublisherId = ?
-		ORDER BY ReleaseDate
+		ORDER BY ReleaseDate DESC
 		LIMIT 20
 		`, UserId)
 	if err != nil {

@@ -5,6 +5,7 @@
             <div v-if="found" style="font-size: 20px;">
                 <div class="row">Followers: {{ followCount }}</div>
                 <div class="row">Followed: {{ followedCount }}</div>
+                <div class="row">Photos: {{ photoCount }}</div>
 
 
                 <div v-if="!isItMe">
@@ -50,6 +51,7 @@ export default {
             found: false,
             followCount: 0,
             followedCount: 0,
+            photoCount: 0,
             isBanned: false,
             isFollowed: false,
             isItMe: false,
@@ -85,6 +87,7 @@ export default {
                 this.userName = response.data.userName;
                 this.followCount = response.data.followCount;
                 this.followedCount = response.data.followedCount;
+                this.photoCount = response.data.photoCount;
                 this.isBanned = response.data.isBanned;
                 this.isFollowed = response.data.isFollowed;
                 this.photoList = response.data.PList;
