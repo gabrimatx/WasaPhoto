@@ -26,8 +26,8 @@
         </div>
         <hr />
         <div class="photos">
-            <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="userName"
-                :likeCount="photo.likecount" :caption="photo.caption" />
+            <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :date="photo.date" :authorName="userName"
+                :likeCount="photo.likecount" :caption="photo.caption"/>
         </div>
     </div>
 </template>

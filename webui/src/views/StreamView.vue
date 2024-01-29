@@ -84,7 +84,7 @@ export default {
       <hr />
   
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="photo.publisherName"
+        <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :date="photo.date" :authorName="photo.publisherName"
           :likeCount="photo.likecount" :caption="photo.caption" class="col mb-4" />
       </div>
     </div>

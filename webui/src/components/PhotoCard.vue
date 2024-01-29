@@ -10,7 +10,7 @@
 
         <img :src="imgSrc" alt="Photo" class="card-img-top" />
         <div class="card-body photo-details">
-          <div class="author">Author: {{ authorName }}</div>
+          <div class="author">Author: {{ authorName }}, {{ date }}</div>
           <div class="caption">
             <div class="caption-border"></div>
             <div class="caption-text">{{ caption }}</div>
@@ -60,6 +60,7 @@ export default {
     likeCount: Number,
     authorName: String,
     caption: String,
+    date: String,
   },
   data() {
     return {
