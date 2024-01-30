@@ -4,9 +4,9 @@ FROM node:lts as builder
 WORKDIR /app
 COPY webui webui
 WORKDIR /app/webui
-### Build Vue.js into plain HTML/CSS/JS
+### Build production
 RUN npm run build-prod
 ### Create final container
 FROM nginx:stable
-### Copy the (built) app from the builder image
+### Copy the built app from image
 COPY --from=builder /app/webui/dist /usr/share/nginx/html
