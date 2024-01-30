@@ -98,6 +98,9 @@ export default {
                 if (error.response) {
                     const statusCode = error.response.status;
                     switch (statusCode) {
+                        case 400:
+                            console.error('Bad request');
+                            this.userName = "You have to login first"
                         case 401:
                             console.error('Access Unauthorized:', error.response.data);
                             // unauthorized

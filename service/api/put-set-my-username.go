@@ -10,6 +10,12 @@ import (
 )
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	if !CheckValidAuth(r) {
+		ctx.Logger.Error("Auth header invalid")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	id, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
 		ctx.Logger.WithError(err).WithField("id", id).Error("User not found")

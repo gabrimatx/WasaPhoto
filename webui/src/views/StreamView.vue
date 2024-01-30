@@ -45,6 +45,10 @@ export default {
                 if (error.response) {
                     const statusCode = error.response.status;
                     switch (statusCode) {
+                        case 400:
+                            console.error('Access Unauthorized:', error.response.data);
+                            // unauthorized
+                            this.titlePage = "You are not logged in"
                         case 401:
                             console.error('Access Unauthorized:', error.response.data);
                             // unauthorized
