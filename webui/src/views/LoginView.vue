@@ -42,8 +42,8 @@ export default {
                 });
                 this.identifier = response.data
                 this.saveTokenToSessionStorage()
-            } catch (e) {
-                this.errormsg = e.toString();
+            } catch (error) {
+                console.error("Error while logging in!");
             }
             this.loading = false;
             this.navigateToMyPage()
@@ -65,7 +65,6 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    /* Adjust as needed */
 }
 
 .login-form {

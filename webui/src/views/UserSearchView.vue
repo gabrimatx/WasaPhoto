@@ -12,18 +12,17 @@
         </form>
         <p v-if="searchExecuted" class="mt-3" style="font-size: 25px;">
             {{ Text }}
-            <ul class="list-group list-group-flush">
+        <ul class="list-group list-group-flush">
             <li v-for="User in UserList" :key="User.id" class="list-group-item">
                 <div class="container">
                     {{ User.username }}
-                    <button type="button" class="btn btn-secondary" @click="$router.push(`/users/${User.id}`)">Profile</button>
+                    <button type="button" class="btn btn-secondary"
+                        @click="$router.push(`/users/${User.id}`)">Profile</button>
                 </div>
-            
-                    
-            </li></ul>
 
 
-
+            </li>
+        </ul>
         </p>
     </div>
 </template>

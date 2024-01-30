@@ -67,7 +67,6 @@ export default {
         switch (statusCode) {
           case 401:
             console.error('Access Unauthorized');
-            // unauthorized
             this.endText = "You have to log in to post a photo";
             this.uploadSuccess = true;
             break;
@@ -75,10 +74,7 @@ export default {
             console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
         }
       }
-
     },
   },
 };
 </script>
-
-<style scoped></style>

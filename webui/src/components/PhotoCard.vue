@@ -19,18 +19,20 @@
             <span class="like-counter">{{ LikeCount }} Likes <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#thumbs-up" />
               </svg></span>
-            <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" :data-bs-target="'#usersModal' + modalId">
+            <button @click="commentPhoto" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+              :data-bs-target="'#usersModal' + modalId">
               Comment <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#message-circle" />
               </svg>
             </button>
-            <button @click="viewComments" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" :data-bs-target="'#listModal' + modalId">
+            <button @click="viewComments" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+              :data-bs-target="'#listModal' + modalId">
               View Comments <svg class="feather">
                 <use href="/feather-sprite-v4.29.0.svg#message-square" />
               </svg>
             </button>
-            <CommentModal :photoId="this.modalId"/>
-            <CommentListModal :photoId="this.modalId"/>
+            <CommentModal :photoId="this.modalId" />
+            <CommentListModal :photoId="this.modalId" />
           </div>
         </div>
       </div>
@@ -90,27 +92,27 @@ export default {
         this.findAuthorId();
       } catch (error) {
         if (error.response) {
-                    const statusCode = error.response.status;
-                    this.notBanned=false;
-                    switch (statusCode) {
-                        case 401:
-                            console.error('Access Unauthorized:', error.response.data);
-                            // unauthorized
-                            break;
-                        case 403:
-                            console.error('Access Forbidden:', error.response.data);
-                            // forbidden
-                            break;
-                        case 404:
-                            console.error('Not Found:', error.response.data);
-                            // not found
-                            break;
-                        default:
-                            console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
-                    }
-                } else {
-                    console.error('Error:', error);
-                }
+          const statusCode = error.response.status;
+          this.notBanned = false;
+          switch (statusCode) {
+            case 401:
+              console.error('Access Unauthorized:', error.response.data);
+              // unauthorized
+              break;
+            case 403:
+              console.error('Access Forbidden:', error.response.data);
+              // forbidden
+              break;
+            case 404:
+              console.error('Not Found:', error.response.data);
+              // not found
+              break;
+            default:
+              console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
+          }
+        } else {
+          console.error('Error:', error);
+        }
       }
     }
   },
@@ -120,8 +122,8 @@ export default {
   methods: {
     async findAuthorId() {
       try {
-        const userId = this.$route.params.userId;   
-        const hasStreamSegment = this.$route.path.includes('/stream');        
+        const userId = this.$route.params.userId;
+        const hasStreamSegment = this.$route.path.includes('/stream');
         if (userId == token && !hasStreamSegment) {
           this.isMe = true;
         };
@@ -140,31 +142,36 @@ export default {
         location.reload();
       }
       catch (error) {
-        console.error(error, "cant delete!")
+        console.error(error, "cant delete photo!")
       }
     },
     async likePhoto() {
       // frontend
       this.isLiked = !this.isLiked;
       // backend
-      const token = sessionStorage.getItem('authToken');
-      if (this.isLiked) {
-        this.LikeCount += 1;
-        await this.$axios.put(`/photos/${this.photoId}/likes/${token}`, {
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-      } else {
-        this.LikeCount -= 1;
-        await this.$axios.delete(`/photos/${this.photoId}/likes/${token}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+      try {
+        const token = sessionStorage.getItem('authToken');
+        if (this.isLiked) {
+          this.LikeCount += 1;
+          await this.$axios.put(`/photos/${this.photoId}/likes/${token}`, {
+          }, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+        } else {
+          this.LikeCount -= 1;
+          await this.$axios.delete(`/photos/${this.photoId}/likes/${token}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
 
+        }
+      } catch (error) {
+        console.error(error, "Error modifying like status.")
       }
+
     },
   },
 };

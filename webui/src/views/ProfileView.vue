@@ -132,23 +132,27 @@ export default {
             // backend
             const userId = this.$route.params.userId;
             const token = sessionStorage.getItem('authToken');
-            if (this.isFollowed) {
-                this.followCount += 1;
-                await this.$axios.put(`/users/${token}/follows/${userId}`, {
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            } else {
-                this.followCount -= 1;
-                await this.$axios.delete(`/users/${token}/follows/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
+            try {
+                if (this.isFollowed) {
+                    this.followCount += 1;
+                    await this.$axios.put(`/users/${token}/follows/${userId}`, {
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                } else {
+                    this.followCount -= 1;
+                    await this.$axios.delete(`/users/${token}/follows/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error(error, "Error modifying follow status.")
             }
+
         },
         async toggleBan() {
             // frontend
@@ -156,22 +160,25 @@ export default {
             // backend
             const userId = this.$route.params.userId;
             const token = sessionStorage.getItem('authToken');
-            if (this.isBanned) {
-                await this.$axios.put(`/users/${token}/bans/${userId}`, {
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            } else {
-                await this.$axios.delete(`/users/${token}/bans/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+            try {
+                if (this.isBanned) {
+                    await this.$axios.put(`/users/${token}/bans/${userId}`, {
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                } else {
+                    await this.$axios.delete(`/users/${token}/bans/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
 
+                }
+            } catch (error) {
+                console.error(error, "Error modifying ban status.")
             }
-
         },
     },
     components: {
