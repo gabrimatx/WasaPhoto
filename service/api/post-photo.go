@@ -34,7 +34,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	err := r.ParseMultipartForm(10 << 20) // memory limit
 	if err != nil {
 		ctx.Logger.Error("Bad multiform data")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -42,7 +42,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		ctx.Logger.Error("Bad photo file")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	defer file.Close()
@@ -53,7 +53,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	err = json.Unmarshal([]byte(additionalData), &photoData)
 	if err != nil {
 		ctx.Logger.Error("Bad json data parsing")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 

@@ -15,9 +15,9 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	err := json.NewDecoder(r.Body).Decode(&requestData)
 	if err != nil {
-	    ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't login user")
-	    w.WriteHeader(http.StatusBadRequest)
-	    return
+		ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't login user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	username := requestData.Username

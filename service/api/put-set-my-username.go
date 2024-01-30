@@ -13,7 +13,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	id, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
 		ctx.Logger.WithError(err).WithField("id", id).Error("User not found")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -35,9 +35,9 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	err = json.NewDecoder(r.Body).Decode(&requestData)
 	if err != nil {
-	    ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't get new name for the user")
-	    w.WriteHeader(http.StatusInternalServerError)
-	    return
+		ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't get new name for the user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	username := requestData.Username
@@ -54,7 +54,6 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 
 	err = rt.db.SetUsername(id, username)
 	if err != nil {
