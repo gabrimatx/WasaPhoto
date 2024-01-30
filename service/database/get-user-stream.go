@@ -20,7 +20,7 @@ func (db *appdbimpl) GetUserStream(UserId uint64) (components.PhotoStreamList, e
 			FROM Bans
 			WHERE BannedId = ?
 		)
-		ORDER BY ReleaseDate
+		ORDER BY ReleaseDate DESC
 		LIMIT 20
 		`, UserId, UserId)
 	if err != nil {
