@@ -2,6 +2,13 @@
 
 Web Application for sharing photos and interact with other users.
 
+## Install dependencies
+
+In webui folder:
+```sh
+npm install
+```
+
 ## How to build container images
 
 ### Backend
