@@ -42,12 +42,16 @@ paths:
         content:
           application/json:
             schema:
-              type: string
-              example: Maria
-              pattern: ".*"
-              description: Username of the user trying to login.
-              minLength: 3
-              maxLength: 16
+              type: object
+              description: Object containing username string.
+              properties:
+                username:
+                  type: string
+                  example: "Maria"
+                  pattern: ".*"
+                  description: Username of the user trying to login.
+                  minLength: 3
+                  maxLength: 16
         required: true
       responses:
         "201":
@@ -65,6 +69,8 @@ paths:
                       as the one on the path.
                     type: integer
                     example: 1
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/:
     post:
@@ -92,6 +98,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}:
     parameters:
@@ -122,6 +130,9 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
     delete:
       operationId: deletePhoto
       description: |-
@@ -140,6 +151,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}/likes/{userId}:
     parameters:
@@ -171,6 +184,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     put:
       operationId: likePhoto
@@ -179,12 +194,14 @@ paths:
       tags:
         - likes
       responses:
-        "201":
-          $ref: "#/components/responses/Created"
+        "200":
+          $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     delete:
       operationId: unlikePhoto
@@ -201,6 +218,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}/comments/:
     parameters:
@@ -220,15 +239,21 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: The comments of the photo
-                items: { $ref: "#/components/schemas/CommentListElement" }
-                minItems: 0
-                maxItems: 50
+                type: object
+                description: Object containing the comment list.
+                properties:
+                  CList:
+                    type: array
+                    description: The comments of the photo
+                    items: { $ref: "#/components/schemas/CommentListElement" }
+                    minItems: 0
+                    maxItems: 50
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     post:
       operationId: commentPhoto
@@ -249,6 +274,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /photos/{photoId}/comments/{commentId}:
     parameters:
@@ -272,14 +299,17 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /users/:
     get:
-      operationId: getUserId
+      operationId: searchUser
       description: |-
-        Get user by username, 
-        fetch the id from the database 
-        if the user exists.
-      summary: Get identifier
+        Get lists of possible users
+        that have username similar 
+        to the one you are searching.
+      summary: Get users listed
       tags:
         - users
       parameters:
@@ -293,16 +323,18 @@ paths:
                 type: object
                 description: Object containing the user identifier.
                 properties:
-                  userId:
-                    type: integer
-                    example: 1
-                    description: Id of the user.
+                  UList:
+                    type: array
+                    description: The users that matched the search.
+                    items: { $ref: "#/components/schemas/User" }
+                    minItems: 0
+                    maxItems: 20
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-
-      
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}:
     parameters:
@@ -319,21 +351,27 @@ paths:
         content:
           application/json:
             schema:
-              type: string
-              description: New name for the user.
-              minLength: 0
-              maxLength: 100
-              example: gabrimat
-              pattern: ".*"
+              type: object
+              description: Object containing new username
+              properties:
+                username:
+                  type: string
+                  description: New name for the user.
+                  minLength: 0
+                  maxLength: 100
+                  example: gabrimat
+                  pattern: ".*"
       responses:
-        "201":
-          $ref: "#/components/responses/Created"
+        "200":
+          $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     get:
       operationId: getUserProfile
@@ -373,6 +411,10 @@ paths:
                     type: integer
                     example: 0
                     description: Number of users that the user follows.
+                  photoCount:
+                    type: integer
+                    example: 0
+                    description: Number of photos posted by the user.
                   isBanned:
                     type: boolean
                     example: true
@@ -387,6 +429,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}/stream/:
     parameters:
@@ -404,17 +448,23 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: Array contain information to show for each photo.
-                items: { $ref: "#/components/schemas/PhotoStreamListElement" }
-                minItems: 0
-                maxItems: 20
+                type: object
+                description: Object containing elements of the feed.
+                properties:
+                  PList:
+                    type: array
+                    description: Array contain information to show for each photo.
+                    items: { $ref: "#/components/schemas/PhotoStreamListElement" }
+                    minItems: 0
+                    maxItems: 20
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}/follows/{followId}:
     parameters:
@@ -438,6 +488,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     delete:
       description: Stop following the selected user.
@@ -454,6 +506,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users/{userId}/bans/{banId}:
     parameters:
@@ -469,14 +523,16 @@ paths:
       tags:
         - bans
       responses:
-        "201":
-          $ref: "#/components/responses/Created"
+        "200":
+          $ref: "#/components/responses/OK"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     delete:
       description: Stop the ban relation with the user you are currently viewing.
@@ -493,6 +549,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   responses:
@@ -513,25 +571,51 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "NOT_FOUND"
+              message: "Element not found."
     Unauthorized:
       description: Access token missing or not valid response.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "UNAUTHORIZED"
+              message: "Authorization token invalid or not present."
     Forbidden:
       description: Forbidden response.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "FORBIDDEN"
+              message: "Wrong authorization for the operation."
     BadRequest:
       description: Bad Request response.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ResponseMessage"
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "BAD_REQUEST"
+              message: "Bad request formatting."
+    InternalServerError:
+      description: Internal server error response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: "INTERNAL_SERVER_ERROR"
+              message: "An internal server error occurred."
 
   parameters:
     userName:
@@ -592,26 +676,43 @@ components:
       scheme: bearer
       bearerFormat: integer
   schemas:
-    ResponseMessage:
+    Error:
       type: object
-      description: |-
-        General response message, 
-        returned by a response
-        after endpoint running.
+      description: Error response made of error code and message.
       properties:
         code:
           type: string
-          description: Code of the response.
+          description: Code of the error.
           minLength: 0
           maxLength: 4
           pattern: ".*"
         message:
           type: string
-          description: Message of the response.
+          description: Message of the error.
           minLength: 0
-          maxLength: 1000
-          example: "Error element not found"
+          maxLength: 50
           pattern: ".*"
+    ResponseMessage:
+      type: object
+      description: |-
+        Response
+        after endpoint running.
+    User:
+      title: User
+      description: This object represent a user, comprised of Id and username.
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Identifier of the user. 
+        username:
+          type: string
+          description: Name of the user registered in the system.
+          minLength: 3
+          maxLength: 20
+          pattern: ".*"
+          example: "Gabriele"
     Photo:
       title: Photo
       description: This object represents a photo in the system.

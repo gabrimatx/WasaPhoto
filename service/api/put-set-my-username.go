@@ -10,10 +10,16 @@ import (
 )
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	if !CheckValidAuth(r) {
+		ctx.Logger.Error("Auth header invalid")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	id, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
 		ctx.Logger.WithError(err).WithField("id", id).Error("User not found")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -29,10 +35,28 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	var username string
-	err = json.NewDecoder(r.Body).Decode(&username)
+	var requestData struct {
+		Username string `json:"username"`
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&requestData)
 	if err != nil {
-		ctx.Logger.WithField("new username", username).Error("invalid json encoding")
+		ctx.Logger.WithError(err).WithField("username", requestData.Username).Error("Can't get new name for the user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	username := requestData.Username
+
+	userID, err := rt.db.GetUser(username)
+	if err != nil {
+		ctx.Logger.WithError(err).WithField("username", username).Error("Can't operate database")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if userID != 0 {
+		ctx.Logger.WithError(err).WithField("username", username).Error("Username already in use.")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

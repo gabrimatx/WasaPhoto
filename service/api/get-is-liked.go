@@ -13,7 +13,7 @@ func (rt *_router) getLiked(w http.ResponseWriter, r *http.Request, ps httproute
 	photoId, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		ctx.Logger.Error("photo not found")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -26,7 +26,7 @@ func (rt *_router) getLiked(w http.ResponseWriter, r *http.Request, ps httproute
 	userId, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
 	if err != nil {
 		ctx.Logger.WithField("id", userId).Error("Can't find user")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

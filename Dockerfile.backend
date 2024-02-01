@@ -1,6 +1,6 @@
-# Create a first temporary image named "builder"
+# Starting image
 FROM golang:1.19.1 AS builder
-# Copy Go code (in "builder")
+# Copy Go code into workdir
 WORKDIR /src/
 COPY . .
 # Build executables (in "builder")
@@ -12,5 +12,5 @@ EXPOSE 3000
 # Copy the executable from the "builder" image
 WORKDIR /app/
 COPY --from=builder /app/webapi ./
-# Set the default program to our Go backend
+# Set default program
 CMD ["/app/webapi"]

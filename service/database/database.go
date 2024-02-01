@@ -13,6 +13,8 @@ type AppDatabase interface {
 	// photos
 	UploadPhoto(photo components.Photo, PublisherId uint64) (uint64, error)
 	DeletePhoto(id uint64) error
+	GetNumberOfPhotos(UserId uint64) (int, error)
+	PhotoCascadeDeletion(photoId uint64) error
 
 	// users
 	SetUsername(UserId uint64, new_username string) error
@@ -21,6 +23,7 @@ type AppDatabase interface {
 	GetUserName(userId uint64) (string, error)
 	GetUserStream(UserId uint64) (components.PhotoStreamList, error)
 	GetProfilePhotos(UserId uint64) (components.PhotoList, error)
+	GetUserSearch(Username string) (components.UserSearchList, error)
 
 	// comments
 	AddComment(Commnt components.Comment) error
@@ -70,7 +73,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE Photos (
 					Id INTEGER PRIMARY KEY AUTOINCREMENT,
-					ReleaseDate VARCHAR(10),
+					ReleaseDate DATETIME,
 					Caption TEXT,
 					PublisherId INTEGER,
 					Likes INTEGER,

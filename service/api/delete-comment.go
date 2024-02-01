@@ -14,7 +14,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	id, err := strconv.ParseUint(ps.ByName("commentId"), 10, 64)
 	if err != nil {
 		ctx.Logger.WithField("id", id).Error("Can't find comment")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

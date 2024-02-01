@@ -2,13 +2,15 @@
   <div class="container mt-5">
     <h2 class="display-4 mb-4">Upload Photo</h2>
     <form @submit.prevent="uploadPhoto" class="needs-validation" novalidate style="font-size: 17px;">
-      <div class="form-group" style="margin: 10px;">
-        <label for="photo">Select Photo:</label>
-        <input type="file" class="form-control-file" id="photo" @change="onFileChange" required />
-        <div class="invalid-feedback" v-if="!photo">Photo is required</div>
+      <div class="container mt-3">
+        <div class="input-group">
+          <input type="file" class="form-control-file" id="photo" @change="onFileChange" required />
+          <div class="invalid-feedback" v-if="!photo">Photo is required</div>
+        </div>
       </div>
 
-      <div class="form-group" style="margin: 10px;">
+
+      <div class="row" style="margin: 10px;">
         <label for="caption">Caption:</label>
         <textarea class="form-control" id="caption" v-model="caption"></textarea>
       </div>
@@ -65,7 +67,6 @@ export default {
         switch (statusCode) {
           case 401:
             console.error('Access Unauthorized');
-            // unauthorized
             this.endText = "You have to log in to post a photo";
             this.uploadSuccess = true;
             break;
@@ -73,10 +74,7 @@ export default {
             console.error(`Unhandled HTTP Error (${statusCode}):`, error.response.data);
         }
       }
-
     },
   },
 };
 </script>
-
-<style scoped></style>

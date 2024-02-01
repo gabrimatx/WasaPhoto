@@ -1,16 +1,10 @@
 <template>
     <div class="container mt-5">
-        <div class="user-info">
-            <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
-            <div v-if="found">
-                <div>Followers: {{ followCount }}</div>
-                <div>Followed: {{ followedCount }}</div>
-
-
+        <h1 class="display-4" style="font-size: 50px;">{{ userName }}</h1>
+        <div v-if="found">
+            <div>
                 <div v-if="!isItMe">
-                    <div class="user-info">Banned: {{ isBanned ? 'Yes' : 'No' }}</div>
-                    <div class="user-info">Followed: {{ isFollowed ? 'Yes' : 'No' }}</div>
-                    <div class="btn-group mt-3">
+                    <div class="btn-group mt-1">
                         <button @click="toggleFollow" class="btn btn-warning">
                             {{ isFollowed ? 'Unfollow' : 'Follow' }} <svg class="feather">
                                 <use href="/feather-sprite-v4.29.0.svg#user-plus" />
@@ -24,11 +18,19 @@
                     </div>
                 </div>
             </div>
-            <hr />
+            <div style="font-size: 20px;" class="container mt-2">
+                <div class="row bg-light p-4 shadow-lg">
+                    <div class="row">Followers: {{ followCount }}</div>
+                    <div class="row">Followed: {{ followedCount }}</div>
+                    <div class="row">Photos: {{ photoCount }}</div>
+                </div>
+            </div>
+
         </div>
+        <hr />
         <div class="photos">
-            <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="userName"
-                :likeCount="photo.likecount" :caption="photo.caption" />
+            <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :date="photo.date"
+                :authorName="userName" :likeCount="photo.likecount" :caption="photo.caption" />
         </div>
     </div>
 </template>
@@ -52,6 +54,7 @@ export default {
             found: false,
             followCount: 0,
             followedCount: 0,
+            photoCount: 0,
             isBanned: false,
             isFollowed: false,
             isItMe: false,
@@ -87,6 +90,7 @@ export default {
                 this.userName = response.data.userName;
                 this.followCount = response.data.followCount;
                 this.followedCount = response.data.followedCount;
+                this.photoCount = response.data.photoCount;
                 this.isBanned = response.data.isBanned;
                 this.isFollowed = response.data.isFollowed;
                 this.photoList = response.data.PList;
@@ -94,6 +98,9 @@ export default {
                 if (error.response) {
                     const statusCode = error.response.status;
                     switch (statusCode) {
+                        case 400:
+                            console.error('Bad request');
+                            this.userName = "You have to login first"
                         case 401:
                             console.error('Access Unauthorized:', error.response.data);
                             // unauthorized
@@ -128,23 +135,27 @@ export default {
             // backend
             const userId = this.$route.params.userId;
             const token = sessionStorage.getItem('authToken');
-            if (this.isFollowed) {
-                this.followCount += 1;
-                await this.$axios.put(`/users/${token}/follows/${userId}`, {
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            } else {
-                this.followCount -= 1;
-                await this.$axios.delete(`/users/${token}/follows/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
+            try {
+                if (this.isFollowed) {
+                    this.followCount += 1;
+                    await this.$axios.put(`/users/${token}/follows/${userId}`, {
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                } else {
+                    this.followCount -= 1;
+                    await this.$axios.delete(`/users/${token}/follows/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error(error, "Error modifying follow status.")
             }
+
         },
         async toggleBan() {
             // frontend
@@ -152,22 +163,25 @@ export default {
             // backend
             const userId = this.$route.params.userId;
             const token = sessionStorage.getItem('authToken');
-            if (this.isBanned) {
-                await this.$axios.put(`/users/${token}/bans/${userId}`, {
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            } else {
-                await this.$axios.delete(`/users/${token}/bans/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+            try {
+                if (this.isBanned) {
+                    await this.$axios.put(`/users/${token}/bans/${userId}`, {
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                } else {
+                    await this.$axios.delete(`/users/${token}/bans/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
 
+                }
+            } catch (error) {
+                console.error(error, "Error modifying ban status.")
             }
-
         },
     },
     components: {
@@ -193,7 +207,6 @@ hr {
 }
 
 .photos .photo-card {
-    width: 200px;
     margin-bottom: 30px;
 }
 </style>

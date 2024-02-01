@@ -15,7 +15,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		ctx.Logger.Error("Bad id")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -54,6 +54,14 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	} else if err != nil {
 		ctx.Logger.WithError(err).WithField("id", id).Error("Can't delete photo")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// cascade deletion of comments and likes
+	err = rt.db.PhotoCascadeDeletion(id)
+	if err != nil {
+		ctx.Logger.WithError(err).WithField("id", id).Error("Can't delete photo's comments and likes")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

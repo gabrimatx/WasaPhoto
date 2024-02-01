@@ -14,7 +14,7 @@ func (rt *_router) getComments(w http.ResponseWriter, r *http.Request, ps httpro
 	id, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		ctx.Logger.Error("photo not found")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

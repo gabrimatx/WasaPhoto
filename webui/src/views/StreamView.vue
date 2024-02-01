@@ -18,12 +18,12 @@ export default {
         }
     },
     watch: {
-    '$route.params.userId'(newParam, oldParam) {
-      if (newParam !== oldParam) {
-        this.refresh();
-      }
+        '$route.params.userId'(newParam, oldParam) {
+            if (newParam !== oldParam) {
+                this.refresh();
+            }
+        },
     },
-  },
     async created() {
         const userId = this.$route.params.userId;
         this.fetchUserData();
@@ -45,6 +45,10 @@ export default {
                 if (error.response) {
                     const statusCode = error.response.status;
                     switch (statusCode) {
+                        case 400:
+                            console.error('Access Unauthorized:', error.response.data);
+                            // unauthorized
+                            this.titlePage = "You are not logged in"
                         case 401:
                             console.error('Access Unauthorized:', error.response.data);
                             // unauthorized
@@ -80,34 +84,13 @@ export default {
 
 <template>
     <div class="container mt-5">
-      <h1 class="display-4 mb-4">{{ titlePage }}</h1>
-      <hr />
-  
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :authorName="photo.publisherName"
-          :likeCount="photo.likecount" :caption="photo.caption" class="col mb-4" />
-      </div>
+        <h1 class="display-4 mb-4">{{ titlePage }}</h1>
+        <hr />
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <PhotoCard v-for="photo in photoList" :key="photo.id" :photoId="photo.id" :date="photo.date"
+                :authorName="photo.publisherName" :likeCount="photo.likecount" :caption="photo.caption" class="col mb-4" />
+        </div>
     </div>
-  </template>
+</template>
   
-
-
-<style scoped>
-.custom-title {
-    font-family: 'serif';
-    font-size: 40px;
-    margin: 40px;
-    text-align: center;
-}
-
-.photos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.photos .photo-card {
-    width: 200px;
-    margin-bottom: 30px;
-}
-</style>
